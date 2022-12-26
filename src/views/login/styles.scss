@@ -1,0 +1,26 @@
+.login-page {
+    background: url(../../assets/images/landscape.jpg) no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    min-width: 100vw;
+    overflow: hidden;
+}
+
+.login-container {
+    background-color: #042B52;
+    border-radius: 0.5em;
+    padding: 1em;   
+}
+
+.logo {
+    text-align: center;
+}
+
+.form {
+    padding: 1em;
+}
+
+label {
+    font-weight: 600;
+    color: white;
+}
