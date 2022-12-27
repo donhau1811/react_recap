@@ -1,26 +1,28 @@
 .login-page {
-    background: url(../../assets/images/landscape.jpg) no-repeat center center;
+    background: url(../../assets/images/landscape.jpg) no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     min-width: 100vw;
     overflow: hidden;
 }
 
-.login-container {
-    background-color: #042B52;
-    border-radius: 0.5em;
-    padding: 1em;   
-}
+// .login-container {
+//     background-color: #042B52;
+//     border-radius: 0.5em;
+//     padding: 1em;  
+//     width: auto; 
+//     height: auto;
+// }
 
-.logo {
-    text-align: center;
-}
+// .logo {
+//     text-align: center;
+// }
 
-.form {
-    padding: 1em;
-}
+// .form {
+//     padding: 1em;
+// }
 
-label {
-    font-weight: 600;
-    color: white;
-}
+// label {
+//     font-weight: 600;
+//     color: white;
+// }
