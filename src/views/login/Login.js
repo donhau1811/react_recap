@@ -42,12 +42,13 @@
 // export default Login;
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { IconButton, InputAdornment } from "@mui/material";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -56,15 +57,26 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./styles.scss";
+import {
+  FTextField,
+  FormProvider,
+  FCheckBox,
+} from "../../components/form/index";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+
+const schema = yup
+  .object({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+  })
+  .required();
 
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="text.primary" align="center" {...props}>
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
@@ -78,96 +90,114 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const navigate = useNavigate();
+
+  const defaultValues = {
+    email: "",
+    password: "",
+    remember: false,
   };
+  const [showPassword, setShowPassword] = useState(false);
+
+  const methods = useForm({ defaultValues, resolver: yupResolver(schema) });
+  const { handleSubmit } = methods;
+
+  const onSubmit = (data) => {
+    if (data.email === "abc@gmail.com" && data.password === "1234") {
+      navigate("/dashboard");
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(theme);
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="login-page">
-        <Container
-          sx={{
-            backgroundColor: "#53a881",
-          }}
-          component="main"
-          maxWidth="xs"
-          fixed
-        >
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <div className="login-page">
           <CssBaseline />
-          <Box
+          <Container
             sx={{
-              marginTop: 18,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              marginTop: "18vh",
+              backgroundColor: "#53a881",
             }}
+            component="main"
+            maxWidth="xs"
+            className="login-container"
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="secondary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <Box sx={{ mt: 1 }}>
+                <FTextField
+                  name="email"
+                  label="Email"
+                  margin="normal"
+                  autoComplete="off"
+                />
+                <FTextField
+                  name="password"
+                  label="Password"
+                  margin="normal"
+                  autoComplete="off"
+                  type={showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                          onMouseDown={(e) => e.preventDefault()}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <FCheckBox name="remember" label="Remember me" />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link href="#" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
+              </Box>
             </Box>
-          </Box>
-          <Copyright sx={{ mt: 8, mb: 4 }} />
-        </Container>
-      </div>
+            <Copyright sx={{ mt: 8, mb: 4 }} />
+          </Container>
+        </div>
+      </FormProvider>
     </ThemeProvider>
   );
 }
