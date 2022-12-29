@@ -42,8 +42,7 @@
 // export default Login;
 
 import * as React from "react";
-import { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -52,11 +51,9 @@ import { IconButton, InputAdornment } from "@mui/material";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./styles.scss";
 import {
   FTextField,
   FormProvider,
@@ -66,6 +63,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import "./styles.scss";
 
 const schema = yup
   .object({
@@ -104,7 +102,8 @@ export default function Login() {
 
   const onSubmit = (data) => {
     if (data.email === "abc@gmail.com" && data.password === "1234") {
-      navigate("/dashboard");
+      // localStorage.setItem("email", data.email)
+      navigate("employee");
     }
   };
 
@@ -133,12 +132,17 @@ export default function Login() {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                 <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
+              </Avatar> */}
+              <Box>
+                <div className="logo">
+                  <img
+                    src={require("../../assets/logo/logo.svg").default}
+                    alt=""
+                  />
+                </div>
+              </Box>
               <Box sx={{ mt: 1 }}>
                 <FTextField
                   name="email"
