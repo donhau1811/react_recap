@@ -2,16 +2,66 @@
   "employee": [
     {
       "id": 1,
-      "name": "Hau",
+      "employeeName": "Hau",
       "email": "hau@gmail.com",
+      "active": false,
       "phone": "9031231"
     },
     {
-      "name": "dasdas",
+      "employeeName": "dasdas",
       "email": "dasdas",
       "phone": "dasdas",
       "active": false,
       "id": 2
+    },
+    {
+      "phone": 12346679,
+      "email": "hau@gmail.com",
+      "employeeName": "dasdas",
+      "active": false,
+      "id": 3
+    },
+    {
+      "phone": 903090759,
+      "email": "hah@gmail.com",
+      "employeeName": "dasdas",
+      "active": true,
+      "id": 4
+    },
+    {
+      "phone": 1234566,
+      "email": "hau@gmail.com",
+      "employeeName": "dsadas",
+      "active": false,
+      "id": 5
+    },
+    {
+      "phone": 123456,
+      "email": "111@gmail.com",
+      "employeeName": "dasdasd",
+      "active": false,
+      "id": 6
+    },
+    {
+      "phone": 123,
+      "email": "hau@gmail.com",
+      "employeeName": "AHIHI",
+      "active": true,
+      "id": 7
+    },
+    {
+      "phone": 123,
+      "email": "há@gmail.com",
+      "employeeName": "hehehe",
+      "active": true,
+      "id": 8
+    },
+    {
+      "phone": 66666,
+      "email": "hau@gmail.com",
+      "employeeName": "fasfa",
+      "active": true,
+      "id": 9
     }
   ]
 }

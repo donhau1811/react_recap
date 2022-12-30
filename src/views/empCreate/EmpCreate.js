@@ -1,10 +1,59 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  FTextField,
-  FormProvider,
-  FCheckBox,
-} from "../../components/form/index";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import EmployeeForm from "../../components/employeeForm/EmployeeForm";
+
+const schema = yup
+  .object({
+    employeeName: yup.string().required(),
+    email: yup.string().email().required(),
+    phone: yup.number().required(),
+  })
+  .required();
+
+export default function EmpCreate() {
+  const navigate = useNavigate();
+
+  const defaultValues = {
+    employeeName: "",
+    email: "",
+    phone: "",
+    active: false,
+  };
+
+  const methods = useForm({ defaultValues, resolver: yupResolver(schema) });
+  const { handleSubmit } = methods;
+
+  const onSubmit = (data) => {
+    fetch("http://localhost:8000/employee", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        alert("Saved successfully");
+        navigate("/employee");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  return (
+    <EmployeeForm
+      methods={methods}
+      onSubmit={handleSubmit(onSubmit)}
+      text="Employee Create"
+      // employeeName
+      // employeeId
+      // employeeActive
+      // employeePhone
+      // employeeEmail
+    />
+  );
+}
 
 // const EmpCreate = () => {
 //   const [id, idchange] = useState("");
@@ -126,11 +175,3 @@ import {
 // };
 
 // export default EmpCreate;
-
-export default function EmpCreate() {
-  return (
-    <>
-      <h1>HELLO</h1>
-    </>
-  );
-}
