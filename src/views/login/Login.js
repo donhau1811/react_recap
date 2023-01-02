@@ -44,10 +44,10 @@
 import * as React from "react";
 import { useState } from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
+// import CssBaseline from "@mui/material/CssBaseline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { IconButton, InputAdornment } from "@mui/material";
+import { IconButton, InputAdornment, Stack } from "@mui/material";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -63,6 +63,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import axios from "axios";
 import "./styles.scss";
 
 const schema = yup
@@ -100,11 +101,29 @@ export default function Login() {
   const methods = useForm({ defaultValues, resolver: yupResolver(schema) });
   const { handleSubmit } = methods;
 
-  const onSubmit = (data) => {
-    if (data.email === "abc@gmail.com" && data.password === "1234") {
-      // localStorage.setItem("email", data.email)
-      navigate("employee");
-    }
+  const onSubmit = async (data) => {
+    const headers = {
+      "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
+      "x-user-agent-t":
+        "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
+      "x-dev-db-key":
+        "c508828c6779fe5b07f9770b0ddf2d1f.T1634806896324.6fa577c015f3345f816c1c1f68fd1e5c",
+    };
+
+    const body = {
+      username: data.email,
+      password: data.password,
+      // typeLogin: 1,
+    };
+    await axios
+      .post("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user_auth", body, {
+        headers,
+      })
+      .then((res) => {
+        if (res.status === 200) navigate("employee");
+        console.log(res);
+      })
+      .catch((err) => console.log(err.message));
   };
 
   // useEffect(() => {
@@ -114,16 +133,15 @@ export default function Login() {
   return (
     <ThemeProvider theme={theme}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <div className="login-page">
-          <CssBaseline />
+        <Stack className="login-page">
+          {/* <CssBaseline /> */}
           <Container
             sx={{
-              marginTop: "18vh",
+              marginY: "auto",
               backgroundColor: "#53a881",
             }}
             component="main"
             maxWidth="xs"
-            className="login-container"
           >
             <Box
               sx={{
@@ -132,29 +150,24 @@ export default function Login() {
                 alignItems: "center",
               }}
             >
-              {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar> */}
               <Box>
-                <div className="logo">
-                  <img
-                    src={require("../../assets/logo/logo.svg").default}
-                    alt=""
-                  />
-                </div>
+                <img
+                  src={require("../../assets/logo/logo.svg").default}
+                  alt=""
+                />
               </Box>
               <Box sx={{ mt: 1 }}>
                 <FTextField
                   name="email"
                   label="Email"
                   margin="normal"
-                  autoComplete="off"
+                  autoComplete="on"
                 />
                 <FTextField
                   name="password"
                   label="Password"
                   margin="normal"
-                  autoComplete="off"
+                  autoComplete="on"
                   type={showPassword ? "text" : "password"}
                   InputProps={{
                     endAdornment: (
@@ -200,7 +213,7 @@ export default function Login() {
             </Box>
             <Copyright sx={{ mt: 8, mb: 4 }} />
           </Container>
-        </div>
+        </Stack>
       </FormProvider>
     </ThemeProvider>
   );
