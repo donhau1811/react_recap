@@ -106,8 +106,6 @@ export default function Login() {
       "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
       "x-user-agent-t":
         "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
-      "x-dev-db-key":
-        "c508828c6779fe5b07f9770b0ddf2d1f.T1634806896324.6fa577c015f3345f816c1c1f68fd1e5c",
     };
 
     const body = {
@@ -120,7 +118,7 @@ export default function Login() {
         headers,
       })
       .then((res) => {
-        if (res.status === 200) navigate("employee");
+        if (res.status === 200) navigate("project");
         console.log(res);
       })
       .catch((err) => console.log(err.message));
