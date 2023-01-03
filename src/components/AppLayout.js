@@ -77,7 +77,7 @@ export default function PersistentDrawerLeft() {
         main: "#042B52",
       },
       appbar: {
-        main: "#c8daf1",
+        main: "#fff",
       },
       font: {
         main: "#212121",
@@ -102,6 +102,7 @@ export default function PersistentDrawerLeft() {
         sx={{
           backgroundColor: theme.palette.appbar.main,
           color: theme.palette.font.main,
+          height: '8vh'
         }}
         position="fixed"
         open={open}
@@ -142,7 +143,7 @@ export default function PersistentDrawerLeft() {
             alignItems: "center",
           }}
         >
-          <img src={require("../assets/logo/logo.svg").default} alt="" />
+          <img width="100px" height="100px" src={require("../assets/logo/logo.svg").default} alt="" />
         </Box>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -195,6 +196,7 @@ export default function PersistentDrawerLeft() {
           bottom: 0,
           backgroundColor: theme.palette.appbar.main,
           color: theme.palette.font.main,
+          height: "8vh"
         }}
       >
         <Toolbar>
