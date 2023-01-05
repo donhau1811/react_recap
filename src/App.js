@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import "./styles.scss";
 
 const loading = (
-  <div>
+  <div
+    style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+  >
     <img
       width="300px"
       height="300px"
@@ -23,7 +25,7 @@ function App() {
   return (
     <Suspense fallback={loading}>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/sign-in" element={<Login />} />
         <Route path="*" name="Home" element={<AppLayout />} />
         <Route />
       </Routes>

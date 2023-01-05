@@ -1,6 +1,6 @@
 import React from "react";
 import MuiAppBar from "@mui/material/AppBar";
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -25,12 +25,11 @@ const AppBar = styled(MuiAppBar, {
 
 const AppHeader = ({open, handleDrawerOpen, theme}) => {
   return (
-    <ThemeProvider theme={theme}>
       <AppBar
         sx={{
           backgroundColor: "background.default",
           color: "common.black",
-          height: "8vh",
+          minHeight: "8vh",
         }}
         position="fixed"
         open={open}
@@ -55,7 +54,6 @@ const AppHeader = ({open, handleDrawerOpen, theme}) => {
           </Typography>
         </Toolbar>
       </AppBar>
-    </ThemeProvider>
   );
 };
 

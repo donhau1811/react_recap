@@ -44,7 +44,7 @@
 import * as React from "react";
 import { useState } from "react";
 import Button from "@mui/material/Button";
-// import CssBaseline from "@mui/material/CssBaseline";
+import CssBaseline from "@mui/material/CssBaseline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IconButton, InputAdornment, Stack } from "@mui/material";
@@ -124,18 +124,14 @@ export default function Login() {
       .catch((err) => console.log(err.message));
   };
 
-  // useEffect(() => {
-  //   console.log(theme);
-  // }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack className="login-page">
-          {/* <CssBaseline /> */}
+          <CssBaseline />
           <Container
             sx={{
-              marginY: "auto",
+              margin: "auto",
               backgroundColor: "#53a881",
             }}
             component="main"
@@ -146,6 +142,7 @@ export default function Login() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                mt: "1vh",
               }}
             >
               <Box>

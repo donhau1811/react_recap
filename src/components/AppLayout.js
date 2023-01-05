@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppHeader from "./AppHeader";
@@ -39,13 +39,19 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", fontFamily: theme.typography.fontFamily }}>
         <CssBaseline />
-        <AppHeader handleDrawerOpen={handleDrawerOpen} open={open} theme={theme}/>
-        <AppSidebar handleDrawerClose={handleDrawerClose} open={open} theme={theme}/>
-        <AppContent open={open} theme={theme}/>
+        <AppHeader
+          handleDrawerOpen={handleDrawerOpen}
+          open={open}
+          theme={theme}
+        />
+        <AppSidebar
+          handleDrawerClose={handleDrawerClose}
+          open={open}
+          theme={theme}
+        />
+        <AppContent open={open} theme={theme} />
       </Box>
-    </ThemeProvider>
   );
 }
