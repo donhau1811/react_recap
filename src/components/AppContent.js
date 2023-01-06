@@ -38,24 +38,22 @@ const AppContent = ({ open, theme }) => {
     <ThemeProvider theme={theme}>
       <Main open={open}>
         <DrawerHeader />
-        <Stack  bgcolor="#dfe7f2" minHeight="91vh" overflow="hidden">
-          <Routes>
-            {routes.map((route, idx) => {
-              return (
-                route.element && (
-                  <Route
-                    key={idx}
-                    path={route.path}
-                    exact={route.exact}
-                    name={route.name}
-                    element={<route.element />}
-                  />
-                )
-              );
-            })}
-            <Route path="/" element={<Navigate to="dashboard" replace />} />
-          </Routes>
-        </Stack>
+        <Routes>
+          {routes.map((route, idx) => {
+            return (
+              route.element && (
+                <Route
+                  key={idx}
+                  path={route.path}
+                  exact={route.exact}
+                  name={route.name}
+                  element={<route.element />}
+                />
+              )
+            );
+          })}
+          <Route path="/" element={<Navigate to="dashboard" replace />} />
+        </Routes>
       </Main>
     </ThemeProvider>
   );

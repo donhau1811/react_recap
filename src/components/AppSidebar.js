@@ -37,7 +37,7 @@ const ListItemIcon1 = styled(ListItemButton)(({ theme }) => ({
   color: theme.palette.listItem.main,
 }));
 
-const Divider1 = styled(Divider)(({ theme, handleDrawerClose }) => ({
+const Divider1 = styled(Divider)(({ theme }) => ({
   background: theme.palette.background.default,
 }));
 
@@ -91,7 +91,7 @@ const AppSidebar = ({ open, handleDrawerClose, theme }) => {
                     <MailIcon fontSize="large" />
                   )}
                 </ListItemIcon1>
-                <ListItemText primary={text} fontSize="large" />
+                <ListItemText primary={text} />
               </ListItemButton>
             </ListItem1>
           ))}
