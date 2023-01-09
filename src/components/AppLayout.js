@@ -8,7 +8,7 @@ import AppContent from "./AppContent";
 
 const theme = createTheme({
   typography: {
-    fontFamily: "Inter",
+    fontFamily: "Inter, sans-serif",
   },
   palette: {
     sidebar: {

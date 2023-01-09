@@ -1,3 +1,94 @@
-.super-app-theme--header {
-    background-color: red;
+.custom-sort-icon {
+    transform: rotate(90deg) !important;
+    margin-left: 8px;
 }
+
+.react-dataTable {
+    border-radius: 0;
+
+    .rdt_TableHead {
+        .rdt_TableHeadRow {
+            background-color: #C8DAF1;
+            border-bottom: 0;
+            min-height: 0;
+            height: 50px;
+
+            .rdt_TableCol {
+                padding: 10px;
+
+                &:first-of-type {
+                    padding-left: 20px;
+                }
+
+                .rdt_TableCol_Sortable {
+                    color: #042B52;
+                    font-weight: 600;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    letter-spacing: 0;
+                    text-align: center;
+
+                    &:hover {
+                        color: #0f73cf;
+                    }
+                }
+            }
+        }
+    }
+
+    .rdt_TableBody {
+        .rdt_TableRow {
+            flex: 0 0 auto;
+            min-height: 60px;
+            height: inherit;
+            color: #143f68;
+            font-size: 14px;
+            align-content: center;
+            background-color: #f9fafc;
+
+            .rdt_TableCell {
+                padding: 10px;
+
+                &:first-of-type {
+                    padding-left: 20px;
+                }
+
+                .column-action {
+                    svg {
+                        stroke: #486077;
+                    }
+
+                    .dropdown-item:hover {
+                        svg {
+                            stroke: #0394FF;
+                        }
+                    }
+
+                    .dropdown-item:active {
+                        svg {
+                            stroke: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .react-paginate {
+        &.separated-pagination {
+
+            .page-item:first-child .page-link,
+            .page-item:last-child .page-link {
+                border-radius: 50%;
+            }
+        }
+    }
+}
+
+.react-dataTable-version-2 {
+    .rdt_TableBody::-webkit-scrollbar:vertical {
+    //   display: none;
+    width: 0;
+    }
+  }
+
