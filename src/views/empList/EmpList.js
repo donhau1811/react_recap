@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Box, Button, Container, Grid, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Stack,
+} from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useForm } from "react-hook-form";
 import { FormProvider, FTextField } from "../../components/form/index";
@@ -22,19 +29,31 @@ const EmpList = () => {
       "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
     ree_user_id: "188",
     ree_token:
-      "beffcdbbd4a61952a649053043929d9c.T1673228640737.018d4d6c40fae16cba98e7f842783d70",
+      "a7a7e86d496efbf5c235918ff3f0c2e8.T1673313977403.7cc08c1ccdadd8916846e8eead5e3226",
+  };
+
+  const replaceIdByUserName = (listId) => {
+    return (listId || [])
+      ?.map(
+        (item) => userList?.find((data) => data?.id === item)?.fullName || ""
+      )
+      ?.toString();
   };
 
   useEffect(() => {
-    axios.get("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user?rowsPerPage=9999", { headers })
-    .then((resp) => {
-      setUserList(resp.data.data);
-      console.log(resp);
-    })
-    .catch((err) => {
-      console.log(err.message)
-    })
-  }, [])
+    axios
+      .get(
+        "https://rsm2021-d3bzmmng.an.gateway.dev/glf_user?rowsPerPage=9999",
+        { headers }
+      )
+      .then((resp) => {
+        setUserList(resp.data.data);
+        console.log(resp);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   useEffect(() => {
     const body = {
@@ -53,17 +72,17 @@ const EmpList = () => {
         }
       )
       .then((resp) => {
-        setEmpList(resp.data.data);
+        const newData = (resp.data.data || [])?.map((item) => ({
+          ...item,
+          userIds: replaceIdByUserName(item.userIds),
+        }));
+        setEmpList(newData);
         console.log(resp);
       })
       .catch((err) => {
         console.log(err.message);
       });
   }, []);
-
-  // const replaceIdByUserName = (listId) => {
-  //   return (listId || [])?.map((item) => userList?.find((data) => data?.id === item)?.fullName || '')?.toString()
-  // }
 
   const methods = useForm();
   const { handleSubmit } = methods;
@@ -118,10 +137,10 @@ const EmpList = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit}>
       <Stack bgcolor="#dfe7f2" minHeight="91vh" overflow="hidden">
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" >
           <Grid
             container
-            rowSpacing={1}
+            rowSpacing={2}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -149,11 +168,11 @@ const EmpList = () => {
               </Button>
             </Grid>
             <Grid item xs="12">
-              <Box sx={{ minHeight: "50vh" }}>
+              <Box>
                 <DataTable
                   columns={columns}
+                  striped
                   data={empList || []}
-                  pagination
                   paginationServer
                   persistTableHead
                   fixedHeader

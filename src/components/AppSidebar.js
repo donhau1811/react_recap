@@ -28,6 +28,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const ListItem1 = styled(ListItem)(({ theme }) => ({
   color: theme.palette.listItem.main,
+
   "&:hover": {
     backgroundColor: theme.palette.background.default,
   },
@@ -59,7 +60,7 @@ const AppSidebar = ({ open, handleDrawerClose, theme }) => {
         open={open}
       >
         <DrawerHeader>
-          <Stack direction="row" spacing={4}>
+          <Stack direction="row" spacing={5}>
             <img
               width="90px"
               height="90px"
@@ -80,36 +81,39 @@ const AppSidebar = ({ open, handleDrawerClose, theme }) => {
           </Stack>
         </DrawerHeader>
         <Divider1 />
-        <List>
+        <List
+        // sx={{
+        //   display: "flex",
+        //   flexDirection: "column",
+        //   justifyContent: "center",
+        //   alignItems: "center"
+        // }}
+        >
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem1 key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon1>
-                  {index % 2 === 0 ? (
-                    <InboxIcon fontSize="large" />
-                  ) : (
-                    <MailIcon fontSize="large" />
-                  )}
-                </ListItemIcon1>
-                <ListItemText primary={text} />
-              </ListItemButton>
+            <ListItem1 key={text}>
+              <ListItemIcon1>
+                {index % 2 === 0 ? (
+                  <InboxIcon fontSize="large" />
+                ) : (
+                  <MailIcon fontSize="large" />
+                )}
+              </ListItemIcon1>
+              <ListItemText primary={text} />
             </ListItem1>
           ))}
         </List>
         <Divider1 />
         <List>
           {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem1 key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon1>
-                  {index % 2 === 0 ? (
-                    <InboxIcon fontSize="large" />
-                  ) : (
-                    <MailIcon fontSize="large" />
-                  )}
-                </ListItemIcon1>
-                <ListItemText primary={text} fontSize="large" />
-              </ListItemButton>
+            <ListItem1 key={text}>
+              <ListItemIcon1>
+                {index % 2 === 0 ? (
+                  <InboxIcon fontSize="large" />
+                ) : (
+                  <MailIcon fontSize="large" />
+                )}
+              </ListItemIcon1>
+              <ListItemText primary={text} fontSize="large" />
             </ListItem1>
           ))}
         </List>

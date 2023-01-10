@@ -21,6 +21,7 @@ const theme = createTheme({
       main: "#718fab",
     },
   },
+
 });
 
 export default function PersistentDrawerLeft() {
@@ -39,19 +40,18 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
-      <Box sx={{ display: "flex", fontFamily: theme.typography.fontFamily }}>
-        <CssBaseline />
-        <AppHeader
-          handleDrawerOpen={handleDrawerOpen}
-          open={open}
-          theme={theme}
-        />
-        <AppSidebar
-          handleDrawerClose={handleDrawerClose}
-          open={open}
-          theme={theme}
-        />
-        <AppContent open={open} theme={theme} />
-      </Box>
+    <Box sx={{ display: "flex", fontFamily: theme.typography.fontFamily }}>
+      <AppHeader
+        handleDrawerOpen={handleDrawerOpen}
+        open={open}
+        theme={theme}
+      />
+      <AppSidebar
+        handleDrawerClose={handleDrawerClose}
+        open={open}
+        theme={theme}
+      />
+      <AppContent open={open} theme={theme} />
+    </Box>
   );
 }

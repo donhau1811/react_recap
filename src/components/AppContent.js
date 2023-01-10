@@ -2,7 +2,7 @@ import React from "react";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import { Navigate, Route, Routes } from "react-router-dom";
 import routes from "../routes";
-import { Stack } from "@mui/material";
+import { CssBaseline, Stack } from "@mui/material";
 
 const drawerWidth = 250;
 
