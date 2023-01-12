@@ -29,7 +29,7 @@ const EmpList = () => {
       "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
     ree_user_id: "188",
     ree_token:
-      "a7a7e86d496efbf5c235918ff3f0c2e8.T1673313977403.7cc08c1ccdadd8916846e8eead5e3226",
+      "210a62493346436de668535f27ad964e.T1673406762509.611f1b34c44d5273c559ee8361686045",
   };
 
   const replaceIdByUserName = (listId) => {
@@ -136,65 +136,63 @@ const EmpList = () => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit}>
-      <Stack bgcolor="#dfe7f2" minHeight="91vh" overflow="hidden">
-        <Container maxWidth="lg" >
-          <Grid
-            container
-            rowSpacing={2}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              m: 1,
-            }}
-          >
-            <Grid item xs>
-              {" "}
-              <FilterAltIcon aria-label="filter projects" fontSize="large" />
-            </Grid>
-            <Grid item xs="3">
-              {" "}
-              <FTextField
-                name="search"
-                label="Search"
-                autoComplete="on"
-                size="small"
-              />
-            </Grid>
-            <Grid item xs="7"></Grid>
-            <Grid item xs="auto">
-              {" "}
-              <Button variant="contained" size="medium">
-                Thêm mới
-              </Button>
-            </Grid>
-            <Grid item xs="12">
-              <Box>
-                <DataTable
-                  columns={columns}
-                  striped
-                  data={empList || []}
-                  paginationServer
-                  persistTableHead
-                  fixedHeader
-                  noHeader
-                  fixedHeaderScrollHeight="calc(100vh - 200px)"
-                  className={classNames(
-                    `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
-                    {
-                      "overflow-hidden": empList?.length <= 0,
-                    }
-                  )}
-                  sortIcon={
-                    <div className="custom-sort-icon">
-                      <Code />
-                    </div>
-                  }
-                />
-              </Box>
-            </Grid>
+      <Container maxWidth="lg">
+        <Grid
+          container
+          rowSpacing={2}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            m: 1,
+          }}
+        >
+          <Grid item xs>
+            {" "}
+            <FilterAltIcon aria-label="filter projects" fontSize="large" />
           </Grid>
-        </Container>
-      </Stack>
+          <Grid item xs="3">
+            {" "}
+            <FTextField
+              name="search"
+              label="Search"
+              autoComplete="on"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs="7"></Grid>
+          <Grid item xs="auto">
+            {" "}
+            <Button variant="contained" size="medium">
+              Thêm mới
+            </Button>
+          </Grid>
+          <Grid item xs="12">
+            <Box>
+              <DataTable
+                columns={columns}
+                striped
+                data={empList || []}
+                paginationServer
+                persistTableHead
+                fixedHeader
+                noHeader
+                fixedHeaderScrollHeight="calc(100vh - 200px)"
+                className={classNames(
+                  `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
+                  {
+                    "overflow-hidden": empList?.length <= 0,
+                  }
+                )}
+                sortIcon={
+                  <div className="custom-sort-icon">
+                    <Code />
+                  </div>
+                }
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
     </FormProvider>
   );
 };

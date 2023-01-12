@@ -27,7 +27,6 @@ function App() {
       <Routes>
         <Route path="/sign-in" element={<Login />} />
         <Route path="*" name="Home" element={<AppLayout />} />
-        <Route />
       </Routes>
     </Suspense>
   );
