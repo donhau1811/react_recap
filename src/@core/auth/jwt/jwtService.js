@@ -1,12 +1,11 @@
 import axios from "axios";
 import qs from "qs";
 import jwtDefaultConfig from "./jwtDefaultConfig";
-import { store } from "@src/redux/storeConfig/store";
-import { SET_TOKEN_TIME_OUT } from "@constants/actions";
+// import { SET_TOKEN_TIME_OUT } from "@constants/actions";
 
 // ** Set token timeout when accessToken is expired
-const setTokenTimeOut = (value) => (dispatch) =>
-  dispatch({ type: SET_TOKEN_TIME_OUT, value });
+// const setTokenTimeOut = (value) => (dispatch) =>
+//   dispatch({ type: SET_TOKEN_TIME_OUT, value });
 
 export default class JwtService {
   static BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
@@ -76,9 +75,9 @@ export default class JwtService {
         const { response } = error;
 
         // Access token timeout
-        if (response && response.status === 419) {
-          store.dispatch(setTokenTimeOut(true));
-        }
+        // if (response && response.status === 419) {
+        //   store.dispatch(setTokenTimeOut(true));
+        // }
 
         // ** if (status === 401) {
         if (

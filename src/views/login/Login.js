@@ -63,8 +63,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import "./styles.scss";
+import useJwt from "../../auth/jwt/useJwt";
+import { handleLogin } from "../../redux/actions/auth";
 
 const schema = yup
   .object({
@@ -91,6 +93,11 @@ const theme = createTheme();
 export default function Login() {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  // const {
+  //   auth: { sessionTimeout },
+  // } = useSelector((state) => state);
+
   const defaultValues = {
     email: "",
     password: "",
@@ -101,27 +108,56 @@ export default function Login() {
   const methods = useForm({ defaultValues, resolver: yupResolver(schema) });
   const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
-    const headers = {
-      "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
-      "x-user-agent-t":
-        "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
-    };
+  // const onSubmit = async (data) => {
+  //   const headers = {
+  //     "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
+  //     "x-user-agent-t":
+  //       "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
+  //   };
 
-    const body = {
-      username: data.email,
-      password: data.password,
-      // typeLogin: 1,
-    };
-    await axios
-      .post("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user_auth", body, {
-        headers,
+  //   const body = {
+  //     username: data.email,
+  //     password: data.password,
+  //     // typeLogin: 1,
+  //   };
+  //   await axios
+  //     .post("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user_auth", body, {
+  //       headers,
+  //     })
+  //     .then((res) => {
+  //       if (res.status === 200) navigate("project");
+  //       console.log(res);
+  //     })
+  //     .catch((err) => console.log(err.message));
+  // };
+
+  const login = async (loginData) => {
+    useJwt
+      .login(loginData)
+      .then(async (res) => {
+        if (!res.data.status) {
+          throw new Error(res.data.message);
+        }
+
+        const data = {
+          accessToken: res?.data?.data?.accessToken,
+          refreshToken: res?.data?.data?.refreshToken,
+          user: res?.data?.data?.user,
+        };
+
+        await dispatch(handleLogin(data));
+        navigate("project");
       })
-      .then((res) => {
-        if (res.status === 200) navigate("project");
-        console.log(res);
-      })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onSubmit = (loginData) => {
+    login({
+      username: loginData.email,
+      password: loginData.password,
+    });
   };
 
   return (
