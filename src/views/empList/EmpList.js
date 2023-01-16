@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
   Button,
   Container,
-  CssBaseline,
   Grid,
-  Stack,
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useForm } from "react-hook-form";
@@ -21,16 +18,15 @@ import "./styles.scss";
 const EmpList = () => {
   const [empList, setEmpList] = useState(null);
   const [userList, setUserList] = useState(null);
-  const navigate = useNavigate();
 
-  const headers = {
-    "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
-    "x-user-agent-t":
-      "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
-    ree_user_id: "188",
-    ree_token:
-      "210a62493346436de668535f27ad964e.T1673406762509.611f1b34c44d5273c559ee8361686045",
-  };
+  // const headers = {
+  //   "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
+  //   "x-user-agent-t":
+  //     "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
+  //   ree_user_id: "188",
+  //   ree_token:
+  //     "210a62493346436de668535f27ad964e.T1673406762509.611f1b34c44d5273c559ee8361686045",
+  // };
 
   const replaceIdByUserName = (listId) => {
     return (listId || [])
@@ -42,13 +38,9 @@ const EmpList = () => {
 
   useEffect(() => {
     axios
-      .get(
-        "https://rsm2021-d3bzmmng.an.gateway.dev/glf_user?rowsPerPage=9999",
-        { headers }
-      )
+      .get("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user?rowsPerPage=9999")
       .then((resp) => {
         setUserList(resp.data.data);
-        console.log(resp);
       })
       .catch((err) => {
         console.log(err.message);
@@ -66,10 +58,7 @@ const EmpList = () => {
     axios
       .post(
         "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-        body,
-        {
-          headers,
-        }
+        body
       )
       .then((resp) => {
         const newData = (resp.data.data || [])?.map((item) => ({
@@ -77,7 +66,6 @@ const EmpList = () => {
           userIds: replaceIdByUserName(item.userIds),
         }));
         setEmpList(newData);
-        console.log(resp);
       })
       .catch((err) => {
         console.log(err.message);

@@ -63,7 +63,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "./styles.scss";
 import useJwt from "../../auth/jwt/useJwt";
 import { handleLogin } from "../../redux/actions/auth";
@@ -94,9 +94,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  // const {
-  //   auth: { sessionTimeout },
-  // } = useSelector((state) => state);
 
   const defaultValues = {
     email: "",
@@ -107,29 +104,6 @@ export default function Login() {
 
   const methods = useForm({ defaultValues, resolver: yupResolver(schema) });
   const { handleSubmit } = methods;
-
-  // const onSubmit = async (data) => {
-  //   const headers = {
-  //     "x-api-key": "AIzaSyBS6rQ_3nB2TN6NCnFlCzhMYeRGL3WEhZI",
-  //     "x-user-agent-t":
-  //       "bfe6f00df8f7aefbd2660be0d5810cfd.T1629692448457.e048a206b8af0918f3a61cd125ba32e4",
-  //   };
-
-  //   const body = {
-  //     username: data.email,
-  //     password: data.password,
-  //     // typeLogin: 1,
-  //   };
-  //   await axios
-  //     .post("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user_auth", body, {
-  //       headers,
-  //     })
-  //     .then((res) => {
-  //       if (res.status === 200) navigate("project");
-  //       console.log(res);
-  //     })
-  //     .catch((err) => console.log(err.message));
-  // };
 
   const login = async (loginData) => {
     useJwt
@@ -145,19 +119,20 @@ export default function Login() {
           user: res?.data?.data?.user,
         };
 
-        await dispatch(handleLogin(data));
-        navigate("project");
+        dispatch(handleLogin(data));
+        navigate("/project")
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const onSubmit = (loginData) => {
+  const onSubmit = (data) => {
     login({
-      username: loginData.email,
-      password: loginData.password,
+      username: data.email,
+      password: data.password,
     });
+    
   };
 
   return (

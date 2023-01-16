@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import AppHeader from "./AppHeader";
 import AppSidebar from "./AppSidebar";
 import AppContent from "./AppContent";
@@ -25,10 +24,6 @@ const theme = createTheme({
 });
 
 export default function PersistentDrawerLeft() {
-  useEffect(() => {
-    console.log(theme);
-  }, []);
-
   const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {

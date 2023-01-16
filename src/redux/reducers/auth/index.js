@@ -1,7 +1,6 @@
 const initialState = {
   userData: {},
   sessionTimeout: false,
-  isTokenTimeOut: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -16,6 +15,12 @@ const authReducer = (state = initialState, action) => {
           action[action.config.storageRefreshTokenKeyName],
         sessionTimeout: false,
       };
+
+    case "LOGOUT": {
+      const obj = { ...action };
+      delete obj.type;
+      return { ...state, userData: {}, ...obj };
+    }
 
     default:
       return state;

@@ -32,6 +32,5 @@ ReactDOM.render(
       </BrowserRouter>
     </Suspense>
   </Provider>,
-
   document.getElementById("root")
 );

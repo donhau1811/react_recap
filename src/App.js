@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { hot } from "react-hot-loader/root";
 import { Routes, Route } from "react-router-dom";
 import "./styles.scss";
 
@@ -32,4 +33,4 @@ function App() {
   );
 }
 
-export default App;
+export default hot(App);

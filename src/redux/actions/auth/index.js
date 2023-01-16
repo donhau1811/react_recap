@@ -1,5 +1,4 @@
 // ** Handle User Login
-// import useJwt from "@src/auth/jwt/useJwt";
 import useJwt from "../../../auth/jwt/useJwt";
 
 const config = useJwt.jwtConfig;
@@ -15,6 +14,7 @@ export const handleLogin = (data) => {
         data[config.storageRefreshTokenKeyName],
     });
 
+    console.log(data);
     // ** Add to user, accessToken & refreshToken to localStorage
     localStorage.setItem("userData", JSON.stringify(data.user));
     localStorage.setItem(
@@ -25,7 +25,20 @@ export const handleLogin = (data) => {
       config.storageRefreshTokenKeyName,
       JSON.stringify(data.refreshToken)
     );
-    localStorage.setItem("loginTime", Date.now().toString());
-    localStorage.setItem("rememberMe", data.rememberMe);
+  };
+};
+
+export const handleLogout = (data) => {
+  return (dispatch) => {
+    localStorage.removeItem("userData");
+    localStorage.removeItem(config.storageTokenKeyName);
+    localStorage.removeItem(config.storageRefreshTokenKeyName);
+
+    dispatch({
+      type: "LOGOUT",
+      [config.storageTokenKeyName]: null,
+      [config.storageRefreshTokenKeyName]: null,
+      ...data,
+    });
   };
 };

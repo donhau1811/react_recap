@@ -1,11 +1,5 @@
 import axios from "axios";
-import qs from "qs";
 import jwtDefaultConfig from "./jwtDefaultConfig";
-// import { SET_TOKEN_TIME_OUT } from "@constants/actions";
-
-// ** Set token timeout when accessToken is expired
-// const setTokenTimeOut = (value) => (dispatch) =>
-//   dispatch({ type: SET_TOKEN_TIME_OUT, value });
 
 export default class JwtService {
   static BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
@@ -19,9 +13,6 @@ export default class JwtService {
   // ** For Refreshing Token
   subscribers = [];
 
-  // ** Request counter
-  requestCount = 0;
-
   // ** Unauthorized
   isUnauthorized = false;
 
@@ -29,9 +20,9 @@ export default class JwtService {
     this.jwtConfig = { ...this.jwtConfig, ...jwtOverrideConfig };
 
     // ** Encode params (Fix space -> +)
-    axios.defaults.paramsSerializer = (params) => {
-      return qs.stringify(params);
-    };
+    // axios.defaults.paramsSerializer = (params) => {
+    //   return qs.stringify(params);
+    // };
 
     // ** Request Interceptor
     axios.interceptors.request.use(
@@ -73,11 +64,6 @@ export default class JwtService {
       },
       (error) => {
         const { response } = error;
-
-        // Access token timeout
-        // if (response && response.status === 419) {
-        //   store.dispatch(setTokenTimeOut(true));
-        // }
 
         // ** if (status === 401) {
         if (
