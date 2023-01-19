@@ -2,7 +2,8 @@ import React from "react";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import { Navigate, Route, Routes } from "react-router-dom";
 import routes from "../routes";
-import { CssBaseline, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
+import { isUserLoggedIn } from "../utility/Utils";
 
 const drawerWidth = 250;
 
@@ -53,7 +54,7 @@ const AppContent = ({ open, theme }) => {
                 )
               );
             })}
-            <Route path="/" element={<Navigate to="dashboard" replace />} />
+            <Route path="/" element={<Navigate to="sign-in" replace />} />
           </Routes>
         </Stack>
       </Main>

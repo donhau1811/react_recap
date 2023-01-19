@@ -139,12 +139,12 @@ export default function Login() {
         <Stack className="login-page">
           <Box
             sx={{
-              width: "100vw",
+              display: "flex",
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
               height: "100vh",
-              paddingY: "8%",
-              paddingX: "10%",
               backgroundColor: "rgba(4,43,82,.7)",
-              overflow: "hidden",
             }}
           >
             <Container
@@ -162,31 +162,47 @@ export default function Login() {
                   alignItems: "center",
                 }}
               >
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ m: 2 }}>
                   <img
                     src={require("../../assets/logo/logo.svg").default}
                     alt=""
                   />
                 </Box>
-                <Box sx={{ mt: 1 }}>
-                  <InputLabel>Thư điện tử</InputLabel>
+                <Typography sx={{ color: "#fff", fontSize: "18px" }}>
+                  Energy Solutions For Green Life
+                </Typography>
+                <Box m={1} p={1}>
+                  <InputLabel sx={{ color: "#fff" }}>Thư điện tử</InputLabel>
                   <FTextField
                     name="email"
-                    label="Email"
                     margin="normal"
                     autoComplete="on"
+                    size="small"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& > fieldset": { borderColor: "white" },
+                      },
+                    }}
+                    inputProps={{ style: { color: "white" } }}
                   />
-                  <InputLabel>Mật khẩu</InputLabel>
+                  <InputLabel sx={{ color: "#fff" }}>Mật khẩu</InputLabel>
                   <FTextField
                     name="password"
-                    label="Password"
                     margin="normal"
+                    size="small"
+                    inputProps={{ style: { color: "white" } }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "& > fieldset": { borderColor: "white" },
+                      },
+                    }}
                     autoComplete="on"
                     type={showPassword ? "text" : "password"}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
+                            sx={{color: "white"}}
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword(!showPassword)}
                             onMouseDown={(e) => e.preventDefault()}
@@ -202,24 +218,26 @@ export default function Login() {
                       ),
                     }}
                   />
-                  <FCheckBox name="remember" label="Remember me" />
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
+                    sx={{ mt: 3, mb: 2, borderRadius: 5 }}
                   >
-                    Sign In
+                    ĐĂNG NHẬP
                   </Button>
                   <Grid container>
                     <Grid item xs>
-                      <Link href="#" variant="body2">
+                      {/* <Link href="#" variant="body2">
                         Forgot password?
-                      </Link>
+                      </Link> */}
                     </Grid>
                     <Grid item>
-                      <Link href="#" variant="body2">
+                      {/* <Link href="#" variant="body2">
                         {"Don't have an account? Sign Up"}
+                      </Link> */}
+                      <Link href="#" variant="body2" sx={{textDecoration: "none", color: "#8aaccb"}}>
+                        Quên mật khẩu?
                       </Link>
                     </Grid>
                   </Grid>
