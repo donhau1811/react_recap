@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProjectList = React.lazy(() => import("./views/empList/EmpList"));
+const ProjectList = React.lazy(() => import("./views/projects"));
 const NotFound = React.lazy(() => import("./views/notFound/NotFound"));
 
 const routes = [

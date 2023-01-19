@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import EmployeeForm from "../../components/employeeForm/EmployeeForm";
+import EmployeeForm from "../../../components/employeeForm/EmployeeForm";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
