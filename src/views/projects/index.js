@@ -25,19 +25,13 @@ import { Code } from "react-feather";
 import classNames from "classnames";
 import Modal from "@mui/material/Modal";
 import { styled } from "@mui/material/styles";
-
+import CP from "../../components/pagination/index"
 import "./styles.scss";
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "35%",
-  // minHeight: "50vh",
+  width: "30%",
   bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
+  borderRadius: "5px",
   p: 4,
 };
 
@@ -168,6 +162,45 @@ const EmpList = () => {
     },
   ];
 
+  const CustomPagination = () => {
+    const count = 17
+
+    return (
+      <CP
+        // totalRows={store?.total || 1}
+        previousLabel={''}
+        nextLabel={''}
+        breakLabel="..."
+        pageCount={count || 1}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={2}
+        activeClassName="active"
+        // forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        // onPageChange={(page) => handlePagination(page)}
+        pageClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        nextClassName={'page-item next'}
+        previousClassName={'page-item prev'}
+        previousLinkClassName={'page-link'}
+        pageLinkClassName={'page-link'}
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName={'pagination react-paginate px-1'}
+        pageRange={2}
+        nextPagesClassName={'page-item next'}
+        nextPagesLinkClassName={'page-link double'}
+        nextPagesLabel={''}
+        previousPagesClassName={'page-item prev'}
+        previousPagesLinkClassName={'page-link double'}
+        previousPagesLabel={''}
+        // rowsPerPage={rowsPerPage}
+        // rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+        // handlePerPage={handlePerPage}
+        // displayUnit={intl.formatMessage({ id: 'Inverter' }).toLowerCase()}
+      />
+    )
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit}>
       <Container maxWidth="lg">
@@ -177,7 +210,7 @@ const EmpList = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            m: 1,
+            // m: 1,
           }}
         >
           <Grid item xs>
@@ -195,6 +228,11 @@ const EmpList = () => {
             slots={Backdrop}
             slotProps={{
               timeout: 500,
+            }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Fade in={open}>
@@ -285,7 +323,12 @@ const EmpList = () => {
                     <Button variant="contained" size="medium" sx={{ mr: 2 }}>
                       Hoàn tất
                     </Button>{" "}
-                    <Button variant="contained" color="inherit" size="medium">
+                    <Button
+                      variant="contained"
+                      color="inherit"
+                      size="medium"
+                      onClick={toggle}
+                    >
                       Hủy bỏ
                     </Button>
                   </Box>
@@ -316,7 +359,9 @@ const EmpList = () => {
                 columns={columns}
                 striped
                 data={empList || []}
+                pagination
                 paginationServer
+                paginationComponent={CustomPagination}
                 persistTableHead
                 fixedHeader
                 noHeader

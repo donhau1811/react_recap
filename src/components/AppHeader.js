@@ -63,7 +63,6 @@ const AppHeader = ({ open, handleDrawerOpen, theme }) => {
       sx={{
         backgroundColor: "background.default",
         color: "common.black",
-        minHeight: "8vh",
       }}
       position="fixed"
       open={open}

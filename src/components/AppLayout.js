@@ -35,7 +35,7 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
-    <Box sx={{ display: "flex", fontFamily: theme.typography.fontFamily }}>
+    <Box sx={{ display: "flex", fontFamily: theme.typography.fontFamily, minHeight: "100vh" }}>
       <AppHeader
         handleDrawerOpen={handleDrawerOpen}
         open={open}

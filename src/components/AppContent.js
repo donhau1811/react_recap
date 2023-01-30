@@ -3,7 +3,6 @@ import { styled, ThemeProvider } from "@mui/material/styles";
 import { Navigate, Route, Routes } from "react-router-dom";
 import routes from "../routes";
 import { Stack } from "@mui/material";
-import { isUserLoggedIn } from "../utility/Utils";
 
 const drawerWidth = 250;
 
@@ -39,7 +38,7 @@ const AppContent = ({ open, theme }) => {
     <ThemeProvider theme={theme}>
       <Main open={open}>
         <DrawerHeader />
-        <Stack bgcolor="#dfe7f2" minHeight="91vh" overflow="hidden">
+        <Stack bgcolor="#dfe7f2" minHeight="91vh">
           <Routes>
             {routes.map((route, idx) => {
               return (

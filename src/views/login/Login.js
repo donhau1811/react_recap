@@ -56,7 +56,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   FTextField,
   FormProvider,
-  FCheckBox,
 } from "../../components/form/index";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
