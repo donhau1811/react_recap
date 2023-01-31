@@ -82,12 +82,6 @@ const AppSidebar = ({ open, handleDrawerClose, theme }) => {
         </DrawerHeader>
         <Divider1 />
         <List
-        // sx={{
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   justifyContent: "center",
-        //   alignItems: "center"
-        // }}
         >
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem1 key={text}>

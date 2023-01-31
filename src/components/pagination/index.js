@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 // import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import Select from "react-select";
 
-
 const CustomPagination = ({
   totalRows,
   pageCount,
@@ -330,12 +329,19 @@ const CustomPagination = ({
             unit: displayUnit || "",
           }}
         /> */}
+        {/* values={{
+            totalRows,
+            displayFrom,
+            displayTo: displayTo < totalRows ? displayTo : totalRows,
+            unit: displayUnit || "",
+          }} */}
+        Đang hiển thị <span class='display-unit'>{displayFrom} - {displayTo}</span> /{totalRows} {displayUnit}
       </div>
 
       <div className={containerClassName}>
         <div className="show">
           {/* <FormattedMessage id="Show" /> */}
-          &nbsp;
+          Hiển thị &nbsp;
           <Select
             className="react-select"
             classNamePrefix="select"
@@ -346,6 +352,7 @@ const CustomPagination = ({
           />
           &nbsp;
           {/* <FormattedMessage id="item" /> */}
+          mục
         </div>
         <ul>
           <li className={previousClasses}>

@@ -108,3 +108,248 @@
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
+.page-item.active .page-link {
+    border-radius: 5px;
+    background-color: #042B52;
+    color: #DFE7F2 !important;
+}
+
+.pagination.pagination-sm .page-item .page-link {
+    font-size: 14px;
+    font-weight: normal;
+    color: #C8DAF1;
+    min-width: 25px;
+    height: 25px;
+}
+
+.custom-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .display-range {
+        .display-unit {
+            font-weight: bold;
+        }
+    }
+
+    .show {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .react-select {
+        .select {
+            &__control {
+                border-width: 0 0 1px 0;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            &__value-container {
+                min-width: 35px;
+                padding: 0 5px;
+
+                .select__single-value {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    ul,
+    li {
+        list-style: none;
+        margin: 0;
+        padding: 2;
+        display: flex;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        margin: 0;
+
+        .page-item {
+            margin: 0 5px;
+
+            &.prev {
+                .page-link {
+                    // background: none;
+                    // background: url('../../assets/svg/pagination/prev-single-arrow.svg') !important;
+
+
+                    &:hover {
+                        &::before {
+                            background-size: 8px;
+                            background-image: url('../../assets/svg/pagination/prev-single-arrow.svg') !important;
+                            // background-image: url("../../assets/logo/logo.svg")
+                        }
+                    }
+
+                    &::before {
+                        background-size: 8px;
+                        background-image: url('../../assets/svg/pagination/prev-single-arrow.svg');
+                    }
+
+                    &.double {
+                        &:hover {
+                            &::before {
+                                background-size: 12px;
+                                background-image: url('../../assets/svg/pagination/prev-double-arrow.svg') !important;
+                            }
+                        }
+
+                        &::before {
+                            background-size: 12px;
+                            background-image: url('../../assets/svg/pagination/prev-double-arrow.svg');
+                        }
+                    }
+                }
+
+                &.disabled {
+                    cursor: not-allowed;
+
+                    .page-link {
+                        &:hover {
+                            &::before {
+                                background-size: 8px;
+                                background-image: url('../../assets/svg/pagination/prev-single-arrow.svg') !important;
+                            }
+                        }
+
+                        &::before {
+                            background-size: 8px;
+                            background-image: url('../../assets/svg/pagination/prev-single-arrow.svg');
+                        }
+
+                        &.double {
+                            &:hover {
+                                &::before {
+                                    background-size: 12px;
+                                    background-image: url('../../assets/svg/pagination/prev-double-arrow.svg') !important;
+                                }
+                            }
+
+                            &::before {
+                                background-size: 12px;
+                                background-image: url('../../assets/svg/pagination/prev-double-arrow.svg');
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.next {
+                .page-link {
+                    // background: url('../../assets/svg/pagination/next-single-arrow.svg');
+
+                    &:hover {
+                        &::after {
+                            background-size: 8px;
+                            background-image: url('../../assets/svg/pagination/next-single-arrow.svg') !important;
+                        }
+                    }
+
+                    &::after {
+                        background-size: 8px;
+                        background-image: url('../../assets/svg/pagination/next-single-arrow.svg');
+                    }
+
+                    &.double {
+                        &:hover {
+                            &::after {
+                                background-size: 12px;
+                                background-image: url('../../assets/svg/pagination/next-double-arrow.svg') !important;
+                            }
+                        }
+
+                        &::after {
+                            background-size: 12px;
+                            background-image: url('../../assets/svg/pagination/next-double-arrow.svg');
+                        }
+                    }
+                }
+
+                &.disabled {
+                    cursor: not-allowed;
+
+                    .page-link {
+                        &:hover {
+                            &::after {
+                                background-size: 8px;
+                                background-image: url('../../assets/svg/pagination/next-single-arrow.svg') !important;
+                            }
+                        }
+
+                        &::after {
+                            background-size: 8px;
+                            background-image: url('../../assets/svg/pagination/next-single-arrow.svg');
+                        }
+
+                        &.double {
+                            &:hover {
+                                &::after {
+                                    background-size: 12px;
+                                    background-image: url('../../assets/svg/pagination/next-double-arrow.svg') !important;
+                                }
+                            }
+
+                            &::after {
+                                background-size: 12px;
+                                background-image: url('../../assets/svg/pagination/next-double-arrow.svg');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.react-dataTable {
+    .avatar {
+        img {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
+    button {
+        height: 35px;
+        width: 140px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: normal;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .btn-outline-info,
+    .btn-outline-success {
+        border-width: 2px !important;
+    }
+
+    .badge {
+        background: transparent;
+        padding: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+
+        svg,
+        img {
+            width: 25px;
+            height: 25px;
+        }
+    }
+}

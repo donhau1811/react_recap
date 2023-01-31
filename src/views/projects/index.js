@@ -25,11 +25,11 @@ import { Code } from "react-feather";
 import classNames from "classnames";
 import Modal from "@mui/material/Modal";
 import { styled } from "@mui/material/styles";
-import CP from "../../components/pagination/index"
+import CP from "../../components/pagination/index";
 import "./styles.scss";
 
 const style = {
-  width: "30%",
+  width: "30vw",
   bgcolor: "background.paper",
   borderRadius: "5px",
   p: 4,
@@ -110,8 +110,6 @@ const EmpList = () => {
       });
   }, []);
 
-  useEffect(() => {});
-
   const methods = useForm();
   const { handleSubmit } = methods;
 
@@ -162,44 +160,76 @@ const EmpList = () => {
     },
   ];
 
+  // const currentPage = 1
+
   const CustomPagination = () => {
-    const count = 17
+    const count = Math.ceil(empList?.length / 10);
 
     return (
       <CP
-        // totalRows={store?.total || 1}
-        previousLabel={''}
-        nextLabel={''}
+        totalRows="10"
+        previousLabel={""}
+        nextLabel={""}
         breakLabel="..."
         pageCount={count || 1}
         marginPagesDisplayed={2}
         pageRangeDisplayed={2}
         activeClassName="active"
         // forcePage={currentPage !== 0 ? currentPage - 1 : 0}
-        // onPageChange={(page) => handlePagination(page)}
-        pageClassName={'page-item'}
-        nextLinkClassName={'page-link'}
-        nextClassName={'page-item next'}
-        previousClassName={'page-item prev'}
-        previousLinkClassName={'page-link'}
-        pageLinkClassName={'page-link'}
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
-        containerClassName={'pagination react-paginate px-1'}
+        onPageChange={handleChangePage}
+        pageClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        nextClassName={"page-item next"}
+        previousClassName={"page-item prev"}
+        previousLinkClassName={"page-link"}
+        pageLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        containerClassName={"pagination react-paginate px-1"}
         pageRange={2}
-        nextPagesClassName={'page-item next'}
-        nextPagesLinkClassName={'page-link double'}
-        nextPagesLabel={''}
-        previousPagesClassName={'page-item prev'}
-        previousPagesLinkClassName={'page-link double'}
-        previousPagesLabel={''}
-        // rowsPerPage={rowsPerPage}
-        // rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+        nextPagesClassName={"page-item next"}
+        nextPagesLinkClassName={"page-link double"}
+        nextPagesLabel={""}
+        previousPagesClassName={"page-item prev"}
+        previousPagesLinkClassName={"page-link double"}
+        previousPagesLabel={""}
+        rowsPerPage={10}
+        rowsPerPageOptions={[
+          { label: 10, value: 10 },
+          { label: 25, value: 25 },
+          { label: 50, value: 50 },
+          { label: 75, value: 75 },
+          { label: 100, value: 100 },
+        ]}
         // handlePerPage={handlePerPage}
-        // displayUnit={intl.formatMessage({ id: 'Inverter' }).toLowerCase()}
+        displayUnit="dự án"
       />
-    )
-  }
+    );
+  };
+
+  const handleChangePage = (e) => {
+    const body = {
+      limit: 10,
+      offset: 10 * e.selected,
+      sortBy: "code",
+      sortDirection: "asc",
+    };
+    axios
+      .post(
+        "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
+        body
+      )
+      .then((resp) => {
+        const newData = (resp.data.data || [])?.map((item) => ({
+          ...item,
+          userIds: replaceIdByUserName(item.userIds),
+        }));
+        setEmpList(newData);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit}>
