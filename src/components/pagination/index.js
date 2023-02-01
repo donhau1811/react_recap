@@ -1,8 +1,8 @@
+/* eslint-disable no-undef */
 import PropTypes from "prop-types";
 import PageView from "./PageView";
 import BreakView from "./BreakView";
 import { useEffect, useState } from "react";
-// import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import Select from "react-select";
 
 const CustomPagination = ({
@@ -316,43 +316,29 @@ const CustomPagination = ({
     }
   }, [initialPage, extraAriaContext]);
 
+  
+
   return (
     // eslint-disable-next-line react/jsx-no-undef
     <div className="custom-pagination">
       <div className="display-range px-1">
-        {/* <FormattedHTMLMessage
-          id="Display range of records"
-          values={{
-            totalRows,
-            displayFrom,
-            displayTo: displayTo < totalRows ? displayTo : totalRows,
-            unit: displayUnit || "",
-          }}
-        /> */}
-        {/* values={{
-            totalRows,
-            displayFrom,
-            displayTo: displayTo < totalRows ? displayTo : totalRows,
-            unit: displayUnit || "",
-          }} */}
-        Đang hiển thị <span class='display-unit'>{displayFrom} - {displayTo}</span> /{totalRows} {displayUnit}
+        Đang hiển thị{" "}
+        <span class="display-unit">
+          {displayFrom} - {displayTo < totalRows ? displayTo : totalRows}
+        </span>{" "}
+        /{totalRows} {displayUnit}
       </div>
 
       <div className={containerClassName}>
         <div className="show">
-          {/* <FormattedMessage id="Show" /> */}
           Hiển thị &nbsp;
           <Select
-            className="react-select"
-            classNamePrefix="select"
             options={rowsPerPageOptions}
             value={{ label: rowsPerPage, value: rowsPerPage }}
             onChange={handlePerPage}
             menuPlacement="auto"
           />
-          &nbsp;
-          {/* <FormattedMessage id="item" /> */}
-          mục
+          &nbsp; mục
         </div>
         <ul>
           <li className={previousClasses}>

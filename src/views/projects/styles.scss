@@ -140,25 +140,25 @@
         align-items: center;
     }
 
-    .react-select {
-        .select {
-            &__control {
-                border-width: 0 0 1px 0;
-                border-radius: 0;
-                padding: 0;
-            }
+    // .react-select {
+    //     .select {
+    //         &__control {
+    //             border-width: 0 0 1px 0;
+    //             border-radius: 0;
+    //             padding: 0;
+    //         }
 
-            &__value-container {
-                min-width: 35px;
-                padding: 0 5px;
+    //         &__value-container {
+    //             min-width: 35px;
+    //             padding: 0 5px;
 
-                .select__single-value {
-                    width: 100%;
-                    text-align: center;
-                }
-            }
-        }
-    }
+    //             .select__single-value {
+    //                 width: 100%;
+    //                 text-align: center;
+    //             }
+    //         }
+    //     }
+    // }
 
     ul,
     li {
@@ -310,46 +310,46 @@
     }
 }
 
-.react-dataTable {
-    .avatar {
-        img {
-            width: 45px;
-            height: 45px;
-        }
-    }
+// .react-dataTable {
+//     .avatar {
+//         img {
+//             width: 45px;
+//             height: 45px;
+//         }
+//     }
 
-    button {
-        height: 35px;
-        width: 140px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: normal;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-    }
+//     button {
+//         height: 35px;
+//         width: 140px;
+//         border-radius: 20px;
+//         font-size: 14px;
+//         font-weight: normal;
+//         padding: 0;
+//         display: flex;
+//         align-items: center;
+//         text-align: center;
+//         justify-content: center;
+//     }
 
-    .btn-outline-info,
-    .btn-outline-success {
-        border-width: 2px !important;
-    }
+//     .btn-outline-info,
+//     .btn-outline-success {
+//         border-width: 2px !important;
+//     }
 
-    .badge {
-        background: transparent;
-        padding: 10px;
-        font-size: 14px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        justify-content: center;
+//     .badge {
+//         background: transparent;
+//         padding: 10px;
+//         font-size: 14px;
+//         cursor: pointer;
+//         display: flex;
+//         align-items: center;
+//         text-align: center;
+//         justify-content: center;
 
-        svg,
-        img {
-            width: 25px;
-            height: 25px;
-        }
-    }
-}
+//         svg,
+//         img {
+//             width: 25px;
+//             height: 25px;
+//         }
+//     }
+// }

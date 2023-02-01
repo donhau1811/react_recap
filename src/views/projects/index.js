@@ -47,8 +47,12 @@ const EmpList = () => {
   const [empList, setEmpList] = useState(null);
   const [userList, setUserList] = useState(null);
   const [customerList, setCustomerList] = useState(null);
-  const [roofRentalList, setRoofRentalList] = useState(null);
   const [open, setOpen] = useState(false);
+  const [totalCount, setTotalCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedOption, setSelectedOption] = useState("");
+
 
   const toggle = () => {
     setOpen(!open);
@@ -78,7 +82,6 @@ const EmpList = () => {
       .get("https://dev---core-api-nnoxwxinaq-as.a.run.app/customer/all")
       .then((resp) => {
         setCustomerList(resp.data.data);
-        console.log(resp.data.data);
       })
       .catch((err) => {
         console.log(err.message);
@@ -87,7 +90,7 @@ const EmpList = () => {
 
   useEffect(() => {
     const body = {
-      limit: 25,
+      limit: rowsPerPage,
       offset: 0,
       sortBy: "code",
       sortDirection: "asc",
@@ -99,7 +102,9 @@ const EmpList = () => {
         body
       )
       .then((resp) => {
-        const newData = (resp.data.data || [])?.map((item) => ({
+        console.log(resp);
+        setTotalCount(resp?.data.count);
+        const newData = (resp?.data.data || [])?.map((item) => ({
           ...item,
           userIds: replaceIdByUserName(item.userIds),
         }));
@@ -160,14 +165,12 @@ const EmpList = () => {
     },
   ];
 
-  // const currentPage = 1
-
-  const CustomPagination = () => {
-    const count = Math.ceil(empList?.length / 10);
+  const CustomPagination = ({ ...rest }) => {
+    const count = Math.ceil(totalCount / rowsPerPage);
 
     return (
       <CP
-        totalRows="10"
+        totalRows={totalCount}
         previousLabel={""}
         nextLabel={""}
         breakLabel="..."
@@ -175,8 +178,9 @@ const EmpList = () => {
         marginPagesDisplayed={2}
         pageRangeDisplayed={2}
         activeClassName="active"
-        // forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={handleChangePage}
+        handlePerPage={handlePerPage}
         pageClassName={"page-item"}
         nextLinkClassName={"page-link"}
         nextClassName={"page-item next"}
@@ -193,7 +197,7 @@ const EmpList = () => {
         previousPagesClassName={"page-item prev"}
         previousPagesLinkClassName={"page-link double"}
         previousPagesLabel={""}
-        rowsPerPage={10}
+        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[
           { label: 10, value: 10 },
           { label: 25, value: 25 },
@@ -201,16 +205,16 @@ const EmpList = () => {
           { label: 75, value: 75 },
           { label: 100, value: 100 },
         ]}
-        // handlePerPage={handlePerPage}
         displayUnit="dự án"
+        {...rest}
       />
     );
   };
 
   const handleChangePage = (e) => {
     const body = {
-      limit: 10,
-      offset: 10 * e.selected,
+      limit: rowsPerPage,
+      offset: rowsPerPage * e.selected,
       sortBy: "code",
       sortDirection: "asc",
     };
@@ -229,6 +233,39 @@ const EmpList = () => {
       .catch((err) => {
         console.log(err.message);
       });
+    setCurrentPage(e.selected + 1);
+  };
+
+  const handlePerPage = (e) => {
+    setSelectedOption(selectedOption.value);
+    const perPage = e.value;
+
+    const body = {
+      limit: perPage,
+      offset: 0,
+      sortBy: "code",
+      sortDirection: "asc",
+    };
+    axios
+      .post(
+        "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
+        body
+      )
+      .then((resp) => {
+        console.log(perPage)
+        const newData = (resp.data.data || [])?.map((item) => ({
+          ...item,
+          userIds: replaceIdByUserName(item.userIds),
+        }));
+        setEmpList(newData);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+      setRowsPerPage(perPage);
+
+
   };
 
   return (
