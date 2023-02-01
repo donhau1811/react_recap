@@ -29,7 +29,11 @@ import CP from "../../components/pagination/index";
 import "./styles.scss";
 
 const style = {
-  width: "30vw",
+  position: "absolute",
+  top: "60%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "35vw",
   bgcolor: "background.paper",
   borderRadius: "5px",
   p: 4,
@@ -51,8 +55,6 @@ const EmpList = () => {
   const [totalCount, setTotalCount] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedOption, setSelectedOption] = useState("");
-
 
   const toggle = () => {
     setOpen(!open);
@@ -165,7 +167,7 @@ const EmpList = () => {
     },
   ];
 
-  const CustomPagination = ({ ...rest }) => {
+  const CustomPagination = () => {
     const count = Math.ceil(totalCount / rowsPerPage);
 
     return (
@@ -206,7 +208,6 @@ const EmpList = () => {
           { label: 100, value: 100 },
         ]}
         displayUnit="dự án"
-        {...rest}
       />
     );
   };
@@ -237,7 +238,6 @@ const EmpList = () => {
   };
 
   const handlePerPage = (e) => {
-    setSelectedOption(selectedOption.value);
     const perPage = e.value;
 
     const body = {
@@ -252,7 +252,7 @@ const EmpList = () => {
         body
       )
       .then((resp) => {
-        console.log(perPage)
+        console.log(perPage);
         const newData = (resp.data.data || [])?.map((item) => ({
           ...item,
           userIds: replaceIdByUserName(item.userIds),
@@ -263,9 +263,7 @@ const EmpList = () => {
         console.log(err.message);
       });
 
-      setRowsPerPage(perPage);
-
-
+    setRowsPerPage(perPage);
   };
 
   return (
@@ -296,11 +294,7 @@ const EmpList = () => {
             slotProps={{
               timeout: 500,
             }}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={{ overflow: 'scroll' }}
           >
             <Fade in={open}>
               <Box sx={style}>

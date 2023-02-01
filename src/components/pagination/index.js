@@ -334,7 +334,7 @@ const CustomPagination = ({
           Hiển thị &nbsp;
           <Select
             options={rowsPerPageOptions}
-            value={{ label: rowsPerPage, value: rowsPerPage }}
+            value={{ label: rowsPerPage }}
             onChange={handlePerPage}
             menuPlacement="auto"
           />
