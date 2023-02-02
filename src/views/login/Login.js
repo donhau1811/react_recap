@@ -139,7 +139,6 @@ export default function Login() {
           <Box
             sx={{
               display: "flex",
-              flexGrow: 1,
               justifyContent: "center",
               alignItems: "center",
               height: "100vh",
@@ -159,6 +158,7 @@ export default function Login() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
+                  height: "70vh"
                 }}
               >
                 <Box sx={{ m: 2 }}>
