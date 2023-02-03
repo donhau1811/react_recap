@@ -41,7 +41,7 @@ const AppContent = ({ open, theme }) => {
     <ThemeProvider theme={theme}>
       <Main open={open}>
         <DrawerHeader />
-        <Box bgcolor="#dfe7f2" height="100%" >
+        <Box bgcolor="#dfe7f2" height="100%" mt={2} >
           <Routes>
             {routes.map((route, idx) => {
               return (

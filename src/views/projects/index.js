@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Chip,
   Container,
   Divider,
   Grid,
@@ -12,7 +13,10 @@ import {
 } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { ReactComponent as IconDelete } from "../../assets/svg/table/ic-delete.svg";
+import { ReactComponent as IconEdit } from "../../assets/svg/table/ic-edit.svg";
+import { ReactComponent as IconView } from "../../assets/svg/table/ic-view.svg";
+import { ReactComponent as IconFilter } from "../../assets/svg/table/ic-filter.svg";
 import { useForm } from "react-hook-form";
 import {
   FormProvider,
@@ -27,11 +31,15 @@ import Modal from "@mui/material/Modal";
 import { styled } from "@mui/material/styles";
 import CP from "../../components/pagination/index";
 import "./styles.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { getListProject } from "./store/actions";
+import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
+import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
 
 const style = {
   position: "absolute",
-  top: "60%",
-  left: "50%",
+  top: "50vh",
+  left: "50vw",
   transform: "translate(-50%, -50%)",
   width: "35vw",
   bgcolor: "background.paper",
@@ -48,13 +56,26 @@ const InputLabel1 = styled(InputLabel)(() => ({
 }));
 
 const EmpList = () => {
-  const [empList, setEmpList] = useState(null);
-  const [userList, setUserList] = useState(null);
-  const [customerList, setCustomerList] = useState(null);
+  const [userList, setUserList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
+  // const [totalCount, setTotalCount] = useState();
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const [empList, setEmpList] = useState(null);
   const [open, setOpen] = useState(false);
-  const [totalCount, setTotalCount] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [cleanData, setCleanData] = useState();
+
+  const dispatch = useDispatch();
+  const { data, params, total } = useSelector((state) => state.projects);
+  const { pagination = {}, searchValue, filterValue } = params || {};
+  const fetchProject = (payload) => {
+    dispatch(
+      getListProject({
+        ...params,
+        ...payload,
+      })
+    );
+  };
 
   const toggle = () => {
     setOpen(!open);
@@ -80,42 +101,65 @@ const EmpList = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get("https://dev---core-api-nnoxwxinaq-as.a.run.app/customer/all")
-      .then((resp) => {
-        setCustomerList(resp.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    const body = {
-      limit: rowsPerPage,
-      offset: 0,
+    const initParamsToFetch = {
+      pagination: {
+        rowsPerPage: ROWS_PER_PAGE_DEFAULT,
+        currentPage: 1,
+      },
       sortBy: "code",
       sortDirection: "asc",
     };
-
-    axios
-      .post(
-        "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-        body
-      )
-      .then((resp) => {
-        console.log(resp);
-        setTotalCount(resp?.data.count);
-        const newData = (resp?.data.data || [])?.map((item) => ({
-          ...item,
-          userIds: replaceIdByUserName(item.userIds),
-        }));
-        setEmpList(newData);
-      })
-      .catch((err) => {
-        console.log(err.message);
+    fetchProject(initParamsToFetch);
+    const newData = (data || [])?.map((item) => ({
+      ...item,
+      userIds: replaceIdByUserName(item.userIds),
+    }));
+    setCleanData(newData);
+    return () => {
+      dispatch({
+        type: SET_PROJECT_PARAMS,
+        payload: initParamsToFetch,
       });
+    };
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("https://dev---core-api-nnoxwxinaq-as.a.run.app/customer/all")
+  //     .then((resp) => {
+  //       setCustomerList(resp.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   const body = {
+  //     limit: rowsPerPage,
+  //     offset: 0,
+  //     sortBy: "code",
+  //     sortDirection: "asc",
+  //   };
+
+  //   axios
+  //     .post(
+  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
+  //       body
+  //     )
+  //     .then((resp) => {
+  //       console.log(resp);
+  //       setTotalCount(resp?.data.count);
+  //       const newData = (resp?.data.data || [])?.map((item) => ({
+  //         ...item,
+  //         userIds: replaceIdByUserName(item.userIds),
+  //       }));
+  //       setEmpList(newData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // }, []);
 
   const methods = useForm();
   const { handleSubmit } = methods;
@@ -123,37 +167,36 @@ const EmpList = () => {
   const columns = [
     {
       name: "STT",
-      selector: "id",
+      selector: (row) => row["id"],
       center: true,
       maxWidth: "50px",
     },
     {
       name: "Mã dự án",
-      selector: "code",
+      selector: (row) => row["code"],
       sortable: true,
       minWidth: "100px",
     },
     {
       name: "Tên dự án",
       sortable: true,
-      selector: "name",
+      selector: (row) => row["name"],
       minWidth: "100px",
     },
     {
       name: "Địa chỉ",
-      selector: "address",
+      selector: (row) => row["address"],
       sortable: true,
       minWidth: "300px",
     },
     {
       name: "Tên công ty khách hàng",
-      selector: "companyName",
+      selector: (row) => row["companyName"],
       sortable: true,
       minWidth: "200px",
     },
     {
       name: "Kế toán phụ trách",
-      selector: "userIds",
       minWidth: "200px",
       cell: (row) => {
         return (
@@ -165,14 +208,45 @@ const EmpList = () => {
         );
       },
     },
+    {
+      name: "Trạng thái",
+      sortable: true,
+      center: true,
+      minWidth: "150px",
+      cell: (row) => {
+        return row.state === "ACTIVE" ? (
+          <Chip label="Hoạt động" variant="outlined" className="activeState" />
+        ) : (
+          <Chip
+            label="Không hoạt động"
+            variant="outlined"
+            className="inactiveState"
+          />
+        );
+      },
+    },
+    {
+      name: "Thao tác",
+      cell: (row) => {
+        return (
+          <>
+            <IconView style={{ marginRight: "15px" }} />
+            <IconEdit style={{ marginRight: "15px" }} />
+            <IconDelete />
+          </>
+        );
+      },
+      center: true,
+      width: "150px",
+    },
   ];
 
   const CustomPagination = () => {
-    const count = Math.ceil(totalCount / rowsPerPage);
+    const count = Math.ceil(total / pagination.rowsPerPage);
 
     return (
       <CP
-        totalRows={totalCount}
+        totalRows={total}
         previousLabel={""}
         nextLabel={""}
         breakLabel="..."
@@ -180,7 +254,9 @@ const EmpList = () => {
         marginPagesDisplayed={2}
         pageRangeDisplayed={2}
         activeClassName="active"
-        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        forcePage={
+          pagination.currentPage !== 0 ? pagination.currentPage - 1 : 0
+        }
         onPageChange={handleChangePage}
         handlePerPage={handlePerPage}
         pageClassName={"page-item"}
@@ -199,7 +275,7 @@ const EmpList = () => {
         previousPagesClassName={"page-item prev"}
         previousPagesLinkClassName={"page-link double"}
         previousPagesLabel={""}
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={pagination.rowsPerPage}
         rowsPerPageOptions={[
           { label: 10, value: 10 },
           { label: 25, value: 25 },
@@ -212,76 +288,93 @@ const EmpList = () => {
     );
   };
 
+  // const handleChangePage = (e) => {
+  //   const body = {
+  //     limit: pagination.rowsPerPage,
+  //     offset: pagination.rowsPerPage * e.selected,
+  //     sortBy: "code",
+  //     sortDirection: "asc",
+  //   };
+  //   axios
+  //     .post(
+  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
+  //       body
+  //     )
+  //     .then((resp) => {
+  //       const newData = (resp.data.data || [])?.map((item) => ({
+  //         ...item,
+  //         userIds: replaceIdByUserName(item.userIds),
+  //       }));
+  //       setEmpList(newData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  //   // setCurrentPage(e.selected + 1);
+  // };
+
   const handleChangePage = (e) => {
-    const body = {
-      limit: rowsPerPage,
-      offset: rowsPerPage * e.selected,
-      sortBy: "code",
-      sortDirection: "asc",
-    };
-    axios
-      .post(
-        "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-        body
-      )
-      .then((resp) => {
-        const newData = (resp.data.data || [])?.map((item) => ({
-          ...item,
-          userIds: replaceIdByUserName(item.userIds),
-        }));
-        setEmpList(newData);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-    setCurrentPage(e.selected + 1);
+    fetchProject({
+      pagination: {
+        ...pagination,
+        currentPage: e.selected + 1,
+      },
+    });
   };
 
+  // const handlePerPage = (e) => {
+  //   const perPage = e.value;
+
+  //   const body = {
+  //     limit: perPage,
+  //     offset: 0,
+  //     sortBy: "code",
+  //     sortDirection: "asc",
+  //   };
+  //   axios
+  //     .post(
+  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
+  //       body
+  //     )
+  //     .then((resp) => {
+  //       console.log(perPage);
+  //       const newData = (resp.data.data || [])?.map((item) => ({
+  //         ...item,
+  //         userIds: replaceIdByUserName(item.userIds),
+  //       }));
+  //       setEmpList(newData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+
+  //   // setRowsPerPage(perPage);
+  // };
+
   const handlePerPage = (e) => {
-    const perPage = e.value;
-
-    const body = {
-      limit: perPage,
-      offset: 0,
-      sortBy: "code",
-      sortDirection: "asc",
-    };
-    axios
-      .post(
-        "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-        body
-      )
-      .then((resp) => {
-        console.log(perPage);
-        const newData = (resp.data.data || [])?.map((item) => ({
-          ...item,
-          userIds: replaceIdByUserName(item.userIds),
-        }));
-        setEmpList(newData);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-
-    setRowsPerPage(perPage);
+    fetchProject({
+      pagination: {
+        rowsPerPage: e.value,
+        currentPage: 1,
+      },
+    });
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid
           container
           rowSpacing={2}
           sx={{
             display: "flex",
             alignItems: "center",
-            // m: 1,
           }}
         >
           <Grid item xs>
             {" "}
             <IconButton onClick={toggle}>
-              <FilterAltIcon aria-label="filter projects" fontSize="large" />
+              <IconFilter />
             </IconButton>
           </Grid>
           <Modal
@@ -294,7 +387,7 @@ const EmpList = () => {
             slotProps={{
               timeout: 500,
             }}
-            style={{ overflow: 'scroll' }}
+            style={{ overflow: "scroll" }}
           >
             <Fade in={open}>
               <Box sx={style}>
@@ -419,7 +512,7 @@ const EmpList = () => {
               <DataTable
                 columns={columns}
                 striped
-                data={empList || []}
+                data={cleanData || []}
                 pagination
                 paginationServer
                 paginationComponent={CustomPagination}
@@ -430,7 +523,7 @@ const EmpList = () => {
                 className={classNames(
                   `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
                   {
-                    "overflow-hidden": empList?.length <= 0,
+                    "overflow-hidden": total <= 0,
                   }
                 )}
                 sortIcon={

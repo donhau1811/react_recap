@@ -158,7 +158,8 @@ export default function Login() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  height: "70vh"
+                  justifyContent: "center",
+                  // minHeight: "70vh"
                 }}
               >
                 <Box sx={{ m: 2 }}>
