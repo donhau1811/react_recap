@@ -25,12 +25,14 @@ const loading = (
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Suspense fallback={loading}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Suspense>
-  </Provider>,
+  <React.StrictMode>
+    <Provider store={store}>
+      <Suspense fallback={loading}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Suspense>
+    </Provider>
+  </React.StrictMode>,
   document.getElementById("root")
 );

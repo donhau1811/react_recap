@@ -37,11 +37,9 @@ import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
 import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
 
 const style = {
-  position: "absolute",
-  top: "50vh",
-  left: "50vw",
-  transform: "translate(-50%, -50%)",
-  width: "35vw",
+  width: "450px",
+  marginX: "auto",
+  marginY: "10px",
   bgcolor: "background.paper",
   borderRadius: "5px",
   p: 4,
@@ -121,7 +119,7 @@ const EmpList = () => {
         payload: initParamsToFetch,
       });
     };
-  }, []);
+  }, [data]);
 
   // useEffect(() => {
   //   axios
@@ -369,6 +367,7 @@ const EmpList = () => {
           sx={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Grid item xs>
@@ -407,7 +406,7 @@ const EmpList = () => {
                 <Divider sx={{ backgroundColor: "black", mt: 2 }} />
                 <Box sx={{ mt: 2 }}>
                   <InputLabel1 htmlFor="customer">Khách hàng</InputLabel1>
-                  <FSelect name="customer" id="customer" size="small">
+                  <FSelect name="customer" id="customer" size="small" placeholder="Chọn khách hàng">
                     {customerList?.map((option) => (
                       <option key={option.id} value={option.id}>
                         {option.fullName}
@@ -417,7 +416,7 @@ const EmpList = () => {
                   <InputLabel1 htmlFor="roofRental">
                     Đơn vị cho thuê mái
                   </InputLabel1>
-                  <FSelect name="roofRental" id="roofRental" size="small">
+                  <FSelect name="roofRental" id="roofRental" size="small" placeholder="Chọn đơn vị cho thuê mái">
                     {[
                       { code: "HCMC", label: "Ho Chi Minh City" },
                       { code: "HN", label: "Hanoi" },
@@ -429,7 +428,7 @@ const EmpList = () => {
                     ))}
                   </FSelect>
                   <InputLabel1 htmlFor="status">Trạng thái</InputLabel1>
-                  <FSelect name="status" id="status" size="small">
+                  <FSelect name="status" id="status" size="small" placeholder="Chọn trạng thái">
                     {[
                       { code: "All", label: "Tất cả trạng thái" },
                       { code: "Active", label: "Hoạt động" },
@@ -445,7 +444,7 @@ const EmpList = () => {
                   <InputLabel1 htmlFor="accountant">
                     Kế toán phụ trách
                   </InputLabel1>
-                  <FSelect name="accountant" id="accountant" size="small">
+                  <FSelect name="accountant" id="accountant" size="small" placeholder="Chọn kế toán phụ trách">
                     {[
                       { code: "All", label: "Tất cả trạng thái" },
                       { code: "Active", label: "Hoạt động" },

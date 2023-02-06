@@ -38,7 +38,6 @@ export default function PersistentDrawerLeft() {
       sx={{
         display: "flex",
         fontFamily: theme.typography.fontFamily,
-        overflowY: "hidden",
         height: "100vh",
         width: "100vw"
       }}
