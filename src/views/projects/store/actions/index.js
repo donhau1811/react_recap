@@ -1,5 +1,11 @@
-import { FETCH_PROJECT_REQUEST } from "../../../../utility/constants/actions";
-import { API_GET_NEW_PROJECT } from "../../../../utility/constants/api";
+import {
+  FETCH_PROJECT_REQUEST,
+  GET_USERS,
+} from "../../../../utility/constants/actions";
+import {
+  API_GET_NEW_PROJECT,
+  API_GET_USERS,
+} from "../../../../utility/constants/api";
 import axios from "axios";
 
 export const getListProject = (params = {}) => {
@@ -37,3 +43,24 @@ export const getListProject = (params = {}) => {
   };
 };
 
+export const getUsersLimit = (params) => {
+  return async (dispatch) => {
+    await axios
+      .get(`${API_GET_USERS}?rowsPerPage=9999`)
+      .then((response) => {
+        if (response.data && response.data.status && response.data.data) {
+          dispatch({
+            type: GET_USERS,
+            data: response.data.data,
+            total: response.data.totalRow,
+            params,
+          });
+        } else {
+          throw new Error(response.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+};

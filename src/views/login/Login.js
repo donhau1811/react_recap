@@ -48,15 +48,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IconButton, InputAdornment, InputLabel, Stack } from "@mui/material";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  FTextField,
-  FormProvider,
-} from "../../components/form/index";
+import { FTextField, FormProvider } from "../../components/form/index";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
@@ -130,6 +127,7 @@ export default function Login() {
       username: data.email,
       password: data.password,
     });
+    // console.log(data.email, data.password);
   };
 
   return (
@@ -159,7 +157,7 @@ export default function Login() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  // minHeight: "70vh"
+                  maxHeight: "70vh",
                 }}
               >
                 <Box sx={{ m: 2 }}>
@@ -202,7 +200,7 @@ export default function Login() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            sx={{color: "white"}}
+                            sx={{ color: "white" }}
                             aria-label="toggle password visibility"
                             onClick={() => setShowPassword(!showPassword)}
                             onMouseDown={(e) => e.preventDefault()}
@@ -227,16 +225,13 @@ export default function Login() {
                     ĐĂNG NHẬP
                   </Button>
                   <Grid container>
-                    <Grid item xs>
-                      {/* <Link href="#" variant="body2">
-                        Forgot password?
-                      </Link> */}
-                    </Grid>
-                    <Grid item>
-                      {/* <Link href="#" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link> */}
-                      <Link href="#" variant="body2" sx={{textDecoration: "none", color: "#8aaccb"}}>
+                    <Grid xs></Grid>
+                    <Grid>
+                      <Link
+                        href="#"
+                        variant="body2"
+                        sx={{ textDecoration: "none", color: "#8aaccb" }}
+                      >
                         Quên mật khẩu?
                       </Link>
                     </Grid>

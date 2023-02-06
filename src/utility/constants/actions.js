@@ -1,3 +1,5 @@
 //project
 export const FETCH_PROJECT_REQUEST = 'FETCH_PROJECT_REQUEST'
 export const SET_PROJECT_PARAMS = 'SET_PROJECT_PARAMS'
+
+export const GET_USERS = 'GET_USERS'

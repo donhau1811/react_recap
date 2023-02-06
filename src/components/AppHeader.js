@@ -35,10 +35,10 @@ const AppHeader = ({ open, handleDrawerOpen, theme }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logoutUser = (e) => {
+  const logoutUser = async (e) => {
     e.preventDefault();
 
-    return MySwal.fire({
+    const result = await MySwal.fire({
       title: "Xác nhận đăng suất",
       html: "Bạn có muốn thoát ứng dụng không?",
       icon: "warning",
@@ -47,15 +47,14 @@ const AppHeader = ({ open, handleDrawerOpen, theme }) => {
       cancelButtonText: "Không",
       customClass: {
         confirmButton: "btn btn-primary mx-2 p-10",
-        cancelButton: "btn btn-outline-secondary ",
+        cancelButton: "btn btn-outline-secondary "
       },
-      buttonsStyling: false,
-    }).then(function (result) {
-      if (result.value) {
-        dispatch(handleLogout());
-        navigate("/sign-in");
-      }
+      buttonsStyling: false
     });
+    if (result.value) {
+      dispatch(handleLogout());
+      navigate("/sign-in");
+    }
   };
 
   return (

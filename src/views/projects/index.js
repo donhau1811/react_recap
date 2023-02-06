@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Box,
   Button,
   Chip,
-  Container,
   Divider,
-  Grid,
+  // Grid,
   IconButton,
   InputLabel,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import { ReactComponent as IconDelete } from "../../assets/svg/table/ic-delete.svg";
@@ -32,7 +31,7 @@ import { styled } from "@mui/material/styles";
 import CP from "../../components/pagination/index";
 import "./styles.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getListProject } from "./store/actions";
+import { getListProject, getUsersLimit } from "./store/actions";
 import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
 import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
 
@@ -54,18 +53,19 @@ const InputLabel1 = styled(InputLabel)(() => ({
 }));
 
 const EmpList = () => {
-  const [userList, setUserList] = useState([]);
   const [customerList, setCustomerList] = useState([]);
-  // const [totalCount, setTotalCount] = useState();
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [rowsPerPage, setRowsPerPage] = useState(10);
-  // const [empList, setEmpList] = useState(null);
   const [open, setOpen] = useState(false);
   const [cleanData, setCleanData] = useState();
 
   const dispatch = useDispatch();
   const { data, params, total } = useSelector((state) => state.projects);
   const { pagination = {}, searchValue, filterValue } = params || {};
+  const userList = useSelector((state) => state.users?.data);
+
+  const toggle = () => {
+    setOpen(!open);
+  };
+
   const fetchProject = (payload) => {
     dispatch(
       getListProject({
@@ -73,10 +73,7 @@ const EmpList = () => {
         ...payload,
       })
     );
-  };
-
-  const toggle = () => {
-    setOpen(!open);
+    dispatch(getUsersLimit());
   };
 
   const replaceIdByUserName = (listId) => {
@@ -88,15 +85,12 @@ const EmpList = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://rsm2021-d3bzmmng.an.gateway.dev/glf_user?rowsPerPage=9999")
-      .then((resp) => {
-        setUserList(resp.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
+    const newData = (data || [])?.map((item) => ({
+      ...item,
+      userIds: replaceIdByUserName(item.userIds),
+    }));
+    setCleanData(newData);
+  }, [data, userList]);
 
   useEffect(() => {
     const initParamsToFetch = {
@@ -108,59 +102,13 @@ const EmpList = () => {
       sortDirection: "asc",
     };
     fetchProject(initParamsToFetch);
-    const newData = (data || [])?.map((item) => ({
-      ...item,
-      userIds: replaceIdByUserName(item.userIds),
-    }));
-    setCleanData(newData);
     return () => {
       dispatch({
         type: SET_PROJECT_PARAMS,
         payload: initParamsToFetch,
       });
     };
-  }, [data]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("https://dev---core-api-nnoxwxinaq-as.a.run.app/customer/all")
-  //     .then((resp) => {
-  //       setCustomerList(resp.data.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   const body = {
-  //     limit: rowsPerPage,
-  //     offset: 0,
-  //     sortBy: "code",
-  //     sortDirection: "asc",
-  //   };
-
-  //   axios
-  //     .post(
-  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-  //       body
-  //     )
-  //     .then((resp) => {
-  //       console.log(resp);
-  //       setTotalCount(resp?.data.count);
-  //       const newData = (resp?.data.data || [])?.map((item) => ({
-  //         ...item,
-  //         userIds: replaceIdByUserName(item.userIds),
-  //       }));
-  //       setEmpList(newData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, []);
-
-  const methods = useForm();
-  const { handleSubmit } = methods;
+  }, []);
 
   const columns = [
     {
@@ -286,31 +234,6 @@ const EmpList = () => {
     );
   };
 
-  // const handleChangePage = (e) => {
-  //   const body = {
-  //     limit: pagination.rowsPerPage,
-  //     offset: pagination.rowsPerPage * e.selected,
-  //     sortBy: "code",
-  //     sortDirection: "asc",
-  //   };
-  //   axios
-  //     .post(
-  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-  //       body
-  //     )
-  //     .then((resp) => {
-  //       const newData = (resp.data.data || [])?.map((item) => ({
-  //         ...item,
-  //         userIds: replaceIdByUserName(item.userIds),
-  //       }));
-  //       setEmpList(newData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  //   // setCurrentPage(e.selected + 1);
-  // };
-
   const handleChangePage = (e) => {
     fetchProject({
       pagination: {
@@ -319,35 +242,6 @@ const EmpList = () => {
       },
     });
   };
-
-  // const handlePerPage = (e) => {
-  //   const perPage = e.value;
-
-  //   const body = {
-  //     limit: perPage,
-  //     offset: 0,
-  //     sortBy: "code",
-  //     sortDirection: "asc",
-  //   };
-  //   axios
-  //     .post(
-  //       "https://dev---core-api-nnoxwxinaq-as.a.run.app/project/search",
-  //       body
-  //     )
-  //     .then((resp) => {
-  //       console.log(perPage);
-  //       const newData = (resp.data.data || [])?.map((item) => ({
-  //         ...item,
-  //         userIds: replaceIdByUserName(item.userIds),
-  //       }));
-  //       setEmpList(newData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-
-  //   // setRowsPerPage(perPage);
-  // };
 
   const handlePerPage = (e) => {
     fetchProject({
@@ -358,183 +252,237 @@ const EmpList = () => {
     });
   };
 
+  const handleSort = (column, direction) => {
+    fetchProject({
+      sortBy: column.selector,
+      sortDirection: direction,
+    });
+  };
+
+  // const handleSearch = (search) => {
+  //   fetchProject({
+  //     pagination: {
+  //       ...pagination,
+  //       currentPage: 1
+  //     },
+  //     searchValue: search
+  //   })
+  // }
+
+  const defaultValues = {
+    search: "",
+  };
+
+  const methods = useForm({ defaultValues });
+  const { handleSubmit } = methods;
+
+  const onSubmit = (value) => {
+    // fetchProject({
+    //   pagination: {
+    //     ...pagination,
+    //     currentPage: 1
+    //   },
+    //   searchValue: data.search
+    // })
+    console.log(value.search);
+  };
+
+  const handleSearchKeyDown = (e, data) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      onSubmit(data);
+    }
+  };
+
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit}>
-      <Container maxWidth="xl">
-        <Grid
-          container
-          rowSpacing={2}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container rowSpacing={2} spacing={0} padding={2}>
+        <Grid xs={4} sx={{ display: "flex" }}>
+          {" "}
+          <IconButton onClick={toggle} sx={{ marginRight: "15px" }}>
+            <IconFilter />
+          </IconButton>
+          <FTextField
+            name="search"
+            label="Search"
+            autoComplete="on"
+            size="small"
+            type="search"
+            onKeyDown={handleSearchKeyDown}
+          />
+        </Grid>
+        <Modal
+          open={open}
+          onClose={toggle}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          closeAfterTransition
+          slots={Backdrop}
+          slotProps={{
+            timeout: 500,
           }}
+          style={{ overflow: "scroll" }}
         >
-          <Grid item xs>
-            {" "}
-            <IconButton onClick={toggle}>
-              <IconFilter />
-            </IconButton>
-          </Grid>
-          <Modal
-            open={open}
-            onClose={toggle}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            closeAfterTransition
-            slots={Backdrop}
-            slotProps={{
-              timeout: 500,
-            }}
-            style={{ overflow: "scroll" }}
-          >
-            <Fade in={open}>
-              <Box sx={style}>
-                <Typography
-                  sx={{
-                    textAlign: "center",
-                    fontWeight: "600",
-                    fontSize: "18px",
-                    lineHeight: "18px",
-                    textTransform: "uppercase",
-                    color: "#042b52",
-                  }}
-                  id="modal-modal-title"
+          <Fade in={open}>
+            <Box sx={style}>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "18px",
+                  textTransform: "uppercase",
+                  color: "#042b52",
+                }}
+                id="modal-modal-title"
+              >
+                Lọc thông tin dự án
+              </Typography>
+              <Divider sx={{ backgroundColor: "black", mt: 2 }} />
+              <Box sx={{ mt: 2 }}>
+                <InputLabel1 htmlFor="customer">Khách hàng</InputLabel1>
+                <FSelect
+                  name="customer"
+                  id="customer"
+                  size="small"
+                  placeholder="Chọn khách hàng"
                 >
-                  Lọc thông tin dự án
-                </Typography>
-                <Divider sx={{ backgroundColor: "black", mt: 2 }} />
-                <Box sx={{ mt: 2 }}>
-                  <InputLabel1 htmlFor="customer">Khách hàng</InputLabel1>
-                  <FSelect name="customer" id="customer" size="small" placeholder="Chọn khách hàng">
-                    {customerList?.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.fullName}
-                      </option>
-                    ))}
-                  </FSelect>
-                  <InputLabel1 htmlFor="roofRental">
-                    Đơn vị cho thuê mái
-                  </InputLabel1>
-                  <FSelect name="roofRental" id="roofRental" size="small" placeholder="Chọn đơn vị cho thuê mái">
-                    {[
-                      { code: "HCMC", label: "Ho Chi Minh City" },
-                      { code: "HN", label: "Hanoi" },
-                      { code: "DN", label: "Da Nang" },
-                    ].map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </FSelect>
-                  <InputLabel1 htmlFor="status">Trạng thái</InputLabel1>
-                  <FSelect name="status" id="status" size="small" placeholder="Chọn trạng thái">
-                    {[
-                      { code: "All", label: "Tất cả trạng thái" },
-                      { code: "Active", label: "Hoạt động" },
-                      { code: "Inactive", label: "Không hoạt động" },
-                    ].map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </FSelect>
-                  <InputLabel1 html="power">Công suất</InputLabel1>
-                  <FTextField name="power" id="power" size="small" />
-                  <InputLabel1 htmlFor="accountant">
-                    Kế toán phụ trách
-                  </InputLabel1>
-                  <FSelect name="accountant" id="accountant" size="small" placeholder="Chọn kế toán phụ trách">
-                    {[
-                      { code: "All", label: "Tất cả trạng thái" },
-                      { code: "Active", label: "Hoạt động" },
-                      { code: "Inactive", label: "Không hoạt động" },
-                    ].map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </FSelect>
-                  <InputLabel1>Ngày vận hành</InputLabel1>
-                  <Grid sx={{ mb: 2 }} container spacing={5}>
-                    <Grid item xs>
-                      <FDatePicker name="startDate" />
-                    </Grid>
-                    <Grid item xs>
-                      <FDatePicker name="endDate" />
-                    </Grid>
+                  {customerList?.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.fullName}
+                    </option>
+                  ))}
+                </FSelect>
+                <InputLabel1 htmlFor="roofRental">
+                  Đơn vị cho thuê mái
+                </InputLabel1>
+                <FSelect
+                  name="roofRental"
+                  id="roofRental"
+                  size="small"
+                  placeholder="Chọn đơn vị cho thuê mái"
+                >
+                  {[
+                    { code: "HCMC", label: "Ho Chi Minh City" },
+                    { code: "HN", label: "Hanoi" },
+                    { code: "DN", label: "Da Nang" },
+                  ].map((option) => (
+                    <option key={option.code} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FSelect>
+                <InputLabel1 htmlFor="status">Trạng thái</InputLabel1>
+                <FSelect
+                  name="status"
+                  id="status"
+                  size="small"
+                  placeholder="Chọn trạng thái"
+                >
+                  {[
+                    { code: "All", label: "Tất cả trạng thái" },
+                    { code: "Active", label: "Hoạt động" },
+                    { code: "Inactive", label: "Không hoạt động" },
+                  ].map((option) => (
+                    <option key={option.code} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FSelect>
+                <InputLabel1 html="power">Công suất</InputLabel1>
+                <FTextField name="power" id="power" size="small" />
+                <InputLabel1 htmlFor="accountant">
+                  Kế toán phụ trách
+                </InputLabel1>
+                <FSelect
+                  name="accountant"
+                  id="accountant"
+                  size="small"
+                  placeholder="Chọn kế toán phụ trách"
+                >
+                  {[
+                    { code: "All", label: "Tất cả trạng thái" },
+                    { code: "Active", label: "Hoạt động" },
+                    { code: "Inactive", label: "Không hoạt động" },
+                  ].map((option) => (
+                    <option key={option.code} value={option.label}>
+                      {option.label}
+                    </option>
+                  ))}
+                </FSelect>
+                <InputLabel1>Ngày vận hành</InputLabel1>
+                <Grid sx={{ mb: 2 }} container spacing={5}>
+                  <Grid xs>
+                    <FDatePicker name="startDate" />
                   </Grid>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      p: 1,
-                      m: 1,
-                    }}
+                  <Grid xs>
+                    <FDatePicker name="endDate" />
+                  </Grid>
+                </Grid>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    p: 1,
+                    m: 1,
+                  }}
+                >
+                  <Button variant="contained" size="medium" sx={{ mr: 2 }}>
+                    Hoàn tất
+                  </Button>{" "}
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    size="medium"
+                    onClick={toggle}
                   >
-                    <Button variant="contained" size="medium" sx={{ mr: 2 }}>
-                      Hoàn tất
-                    </Button>{" "}
-                    <Button
-                      variant="contained"
-                      color="inherit"
-                      size="medium"
-                      onClick={toggle}
-                    >
-                      Hủy bỏ
-                    </Button>
-                  </Box>
+                    Hủy bỏ
+                  </Button>
                 </Box>
               </Box>
-            </Fade>
-          </Modal>
-
-          <Grid item xs="3">
-            {" "}
-            <FTextField
-              name="search"
-              label="Search"
-              autoComplete="on"
-              size="small"
-            />
-          </Grid>
-          <Grid item xs="7"></Grid>
-          <Grid item xs="auto">
-            {" "}
-            <Button variant="contained" size="medium">
-              Thêm mới
-            </Button>
-          </Grid>
-          <Grid item xs="12">
-            <Box>
-              <DataTable
-                columns={columns}
-                striped
-                data={cleanData || []}
-                pagination
-                paginationServer
-                paginationComponent={CustomPagination}
-                persistTableHead
-                fixedHeader
-                noHeader
-                fixedHeaderScrollHeight="calc(100vh - 200px)"
-                className={classNames(
-                  `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
-                  {
-                    "overflow-hidden": total <= 0,
-                  }
-                )}
-                sortIcon={
-                  <div className="custom-sort-icon">
-                    <Code />
-                  </div>
-                }
-              />
             </Box>
-          </Grid>
+          </Fade>
+        </Modal>
+
+        <Grid xs></Grid>
+        <Grid xs={6}></Grid>
+        <Grid xs="auto">
+          {" "}
+          <Button variant="contained" size="medium">
+            Thêm mới
+          </Button>
         </Grid>
-      </Container>
+        <Grid xs={12}>
+          <Box>
+            <DataTable
+              columns={columns}
+              striped
+              data={cleanData || []}
+              pagination
+              paginationServer
+              paginationComponent={CustomPagination}
+              persistTableHead
+              fixedHeader
+              noHeader
+              fixedHeaderScrollHeight="calc(100vh - 200px)"
+              className={classNames(
+                `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
+                {
+                  "overflow-hidden": total <= 0,
+                }
+              )}
+              sortIcon={
+                <div className="custom-sort-icon">
+                  <Code />
+                </div>
+              }
+              onSort={handleSort}
+              isSearching={searchValue}
+            />
+          </Box>
+        </Grid>
+      </Grid>
     </FormProvider>
   );
 };
