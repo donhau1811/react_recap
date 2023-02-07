@@ -39,7 +39,7 @@ export default function PersistentDrawerLeft() {
         display: "flex",
         fontFamily: theme.typography.fontFamily,
         // height: "100vh",
-        // width: "100%"
+        // width: "100vw"
       }}
     >
       <AppHeader

@@ -8,11 +8,11 @@ function FTextField({ name, ...other }) {
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field: { onChange }, fieldState: { error } }) => (
         <TextField
-          {...field}
+          // {...field}
+          onChange={onChange}
           fullWidth
-          // defaultValue=''
           error={!!error}
           helperText={error?.message}
           {...other}

@@ -1,7 +1,7 @@
 import React from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
-import { Grid, IconButton, Toolbar } from "@mui/material";
+import { IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
@@ -47,9 +47,9 @@ const AppHeader = ({ open, handleDrawerOpen, theme }) => {
       cancelButtonText: "Không",
       customClass: {
         confirmButton: "btn btn-primary mx-2 p-10",
-        cancelButton: "btn btn-outline-secondary "
+        cancelButton: "btn btn-outline-secondary ",
       },
-      buttonsStyling: false
+      buttonsStyling: false,
     });
     if (result.value) {
       dispatch(handleLogout());
@@ -75,18 +75,15 @@ const AppHeader = ({ open, handleDrawerOpen, theme }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Grid container>
-          <Grid item xs="11"></Grid>
-          <Grid item xs>
-            <IconButton
-              color="inherit"
-              aria-label="log out"
-              onClick={logoutUser}
-            >
-              <LogoutIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
+
+        <IconButton
+          color="inherit"
+          aria-label="log out"
+          onClick={logoutUser}
+          sx={{ position: "fixed", right: "0" }}
+        >
+          <LogoutIcon />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

@@ -4,8 +4,8 @@ import {
   Button,
   Chip,
   Divider,
-  // Grid,
   IconButton,
+  InputAdornment,
   InputLabel,
   Typography,
 } from "@mui/material";
@@ -34,11 +34,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListProject, getUsersLimit } from "./store/actions";
 import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
 import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
+import ClearIcon from "@mui/icons-material/Clear";
+import SearchIcon from "@mui/icons-material/Search";
 
 const style = {
   width: "450px",
-  marginX: "auto",
-  marginY: "10px",
+  position: "relative",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   borderRadius: "5px",
   p: 4,
@@ -56,10 +60,11 @@ const EmpList = () => {
   const [customerList, setCustomerList] = useState([]);
   const [open, setOpen] = useState(false);
   const [cleanData, setCleanData] = useState();
+  const [showClearIcon, setShowClearIcon] = useState("none");
 
   const dispatch = useDispatch();
   const { data, params, total } = useSelector((state) => state.projects);
-  const { pagination = {}, searchValue, filterValue } = params || {};
+  let { pagination = {}, searchValue, filterValue } = params || {};
   const userList = useSelector((state) => state.users?.data);
 
   const toggle = () => {
@@ -259,58 +264,75 @@ const EmpList = () => {
     });
   };
 
-  // const handleSearch = (search) => {
-  //   fetchProject({
-  //     pagination: {
-  //       ...pagination,
-  //       currentPage: 1
-  //     },
-  //     searchValue: search
-  //   })
-  // }
-
   const defaultValues = {
     search: "",
   };
 
   const methods = useForm({ defaultValues });
-  const { handleSubmit } = methods;
+  const { handleSubmit, reset } = methods;
 
-  const onSubmit = (value) => {
-    // fetchProject({
-    //   pagination: {
-    //     ...pagination,
-    //     currentPage: 1
-    //   },
-    //   searchValue: data.search
-    // })
-    console.log(value.search);
+  const handleSearch = (value) => {
+    fetchProject({
+      pagination: {
+        ...pagination,
+        currentPage: 1,
+      },
+      searchValue: value,
+    });
   };
 
-  const handleSearchKeyDown = (e, data) => {
+  const handleSearchKeyDown = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      onSubmit(data);
+      handleSearch(e.target.value);
     }
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container rowSpacing={2} spacing={0} padding={2}>
-        <Grid xs={4} sx={{ display: "flex" }}>
-          {" "}
-          <IconButton onClick={toggle} sx={{ marginRight: "15px" }}>
-            <IconFilter />
-          </IconButton>
+    <Grid container rowSpacing={2} padding={2}>
+      <Grid xs={1}>
+        {" "}
+        <IconButton onClick={toggle}>
+          <IconFilter />
+        </IconButton>
+      </Grid>
+
+      <Grid xs={3} sx={{ marginLeft: "-2%" }}>
+        <FormProvider methods={methods} onSubmit={handleSubmit(handleSearch)}>
           <FTextField
             name="search"
-            label="Search"
             autoComplete="on"
             size="small"
-            type="search"
             onKeyDown={handleSearchKeyDown}
+            onChange={(e) =>
+              setShowClearIcon(e.target.value === "" ? "none" : "flex")
+            }
+            placeholder="Tìm theo mã, tên dự án, khách hàng"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={(e) => {
+                      reset({ search: e.target.value === "0"});
+                      // console.log(searchValue);
+                      handleSearch("");
+                    }}
+                  >
+                    <ClearIcon
+                      sx={{ display: showClearIcon, fontSize: "medium" }}
+                      color="primary"
+                    />
+                  </IconButton>
+
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
           />
-        </Grid>
+        </FormProvider>
+      </Grid>
+
+      <FormProvider methods={methods} onSubmit={handleSubmit}>
         <Modal
           open={open}
           onClose={toggle}
@@ -444,46 +466,46 @@ const EmpList = () => {
             </Box>
           </Fade>
         </Modal>
+      </FormProvider>
 
-        <Grid xs></Grid>
-        <Grid xs={6}></Grid>
-        <Grid xs="auto">
-          {" "}
-          <Button variant="contained" size="medium">
-            Thêm mới
-          </Button>
-        </Grid>
-        <Grid xs={12}>
-          <Box>
-            <DataTable
-              columns={columns}
-              striped
-              data={cleanData || []}
-              pagination
-              paginationServer
-              paginationComponent={CustomPagination}
-              persistTableHead
-              fixedHeader
-              noHeader
-              fixedHeaderScrollHeight="calc(100vh - 200px)"
-              className={classNames(
-                `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
-                {
-                  "overflow-hidden": total <= 0,
-                }
-              )}
-              sortIcon={
-                <div className="custom-sort-icon">
-                  <Code />
-                </div>
-              }
-              onSort={handleSort}
-              isSearching={searchValue}
-            />
-          </Box>
-        </Grid>
+      <Grid xs></Grid>
+      <Grid xs={5}></Grid>
+      <Grid xs="auto">
+        {" "}
+        <Button variant="contained" size="medium">
+          Thêm mới
+        </Button>
       </Grid>
-    </FormProvider>
+      <Grid xs={12}>
+        <Box>
+          <DataTable
+            columns={columns}
+            striped
+            data={cleanData || []}
+            pagination
+            paginationServer
+            paginationComponent={CustomPagination}
+            persistTableHead
+            fixedHeader
+            noHeader
+            defaultSortAsc={params?.sortDirection === "asc"}
+            fixedHeaderScrollHeight="calc(100vh - 200px)"
+            className={classNames(
+              `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
+              {
+                "overflow-hidden": total <= 0,
+              }
+            )}
+            sortIcon={
+              <div className="custom-sort-icon">
+                <Code />
+              </div>
+            }
+            onSort={handleSort}
+          />
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 
