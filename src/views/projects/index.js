@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -29,16 +30,19 @@ import classNames from "classnames";
 import Modal from "@mui/material/Modal";
 import { styled } from "@mui/material/styles";
 import CP from "../../components/pagination/index";
-import "./styles.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getListProject, getUsersLimit } from "./store/actions";
+import { getListProject } from "./store/actions";
 import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
 import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
+import { getUsersLimit } from "../../redux/actions/users";
+import { getAllRoofVendor } from "../../redux/actions/roofVendor";
+import { getAllCustomer } from "../../redux/actions/customer";
+import "./styles.scss";
 
 const style = {
-  width: "450px",
+  width: "500px",
   position: "relative",
   top: "50%",
   left: "50%",
@@ -57,15 +61,15 @@ const InputLabel1 = styled(InputLabel)(() => ({
 }));
 
 const EmpList = () => {
-  const [customerList, setCustomerList] = useState([]);
+  // const [customerList, setCustomerList] = useState([]);
   const [open, setOpen] = useState(false);
   const [cleanData, setCleanData] = useState();
   const [showClearIcon, setShowClearIcon] = useState("none");
-
   const dispatch = useDispatch();
   const { data, params, total } = useSelector((state) => state.projects);
   let { pagination = {}, searchValue, filterValue } = params || {};
   const userList = useSelector((state) => state.users?.data);
+  const inputRef = useRef();
 
   const toggle = () => {
     setOpen(!open);
@@ -88,6 +92,11 @@ const EmpList = () => {
       )
       ?.toString();
   };
+
+  useEffect(() => {
+    dispatch(getAllRoofVendor());
+    dispatch(getAllCustomer());
+  }, []);
 
   useEffect(() => {
     const newData = (data || [])?.map((item) => ({
@@ -118,7 +127,8 @@ const EmpList = () => {
   const columns = [
     {
       name: "STT",
-      selector: (row) => row["id"],
+      cell: (row, index) =>
+        index + (pagination?.currentPage - 1) * pagination.rowsPerPage + 1,
       center: true,
       maxWidth: "50px",
     },
@@ -265,11 +275,22 @@ const EmpList = () => {
   };
 
   const defaultValues = {
-    search: "",
+    searchValue: "" || undefined,
+  };
+
+  const defaultValuesFilter = {
+    // roofRental: "" || undefined,
+    // customer: "" || undefined,
+    // status: "" || undefined,
+    // power: "",
+    // accountant: "" || undefined,
+    // startDate: "" || undefined,
+    // endDate: "" || undefined,
+    example: "",
   };
 
   const methods = useForm({ defaultValues });
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit } = methods;
 
   const handleSearch = (value) => {
     fetchProject({
@@ -279,6 +300,7 @@ const EmpList = () => {
       },
       searchValue: value,
     });
+    console.log(value);
   };
 
   const handleSearchKeyDown = (e) => {
@@ -288,51 +310,21 @@ const EmpList = () => {
     }
   };
 
-  return (
-    <Grid container rowSpacing={2} padding={2}>
-      <Grid xs={1}>
-        {" "}
-        <IconButton onClick={toggle}>
-          <IconFilter />
-        </IconButton>
-      </Grid>
+  const reduxRoofVendor = useSelector((state) => state.roofVendors?.data);
+  const reduxCustomer = useSelector((state) => state.customers?.data);
 
-      <Grid xs={3} sx={{ marginLeft: "-2%" }}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(handleSearch)}>
-          <FTextField
-            name="search"
-            autoComplete="on"
-            size="small"
-            onKeyDown={handleSearchKeyDown}
-            onChange={(e) =>
-              setShowClearIcon(e.target.value === "" ? "none" : "flex")
-            }
-            placeholder="Tìm theo mã, tên dự án, khách hàng"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={(e) => {
-                      reset({ search: e.target.value === "0"});
-                      // console.log(searchValue);
-                      handleSearch("");
-                    }}
-                  >
-                    <ClearIcon
-                      sx={{ display: showClearIcon, fontSize: "medium" }}
-                      color="primary"
-                    />
-                  </IconButton>
+  const onFilter = (d) => {
+    // console.log(value?.customer?.value || null);
+    console.log(d);
+  };
 
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </FormProvider>
-      </Grid>
+  const methods2 = useForm({ defaultValues: defaultValuesFilter });
 
-      <FormProvider methods={methods} onSubmit={handleSubmit}>
+  const { handleSubmit: handleSubmitFilter } = methods2;
+
+  const ModalComponent = () => {
+    return (
+      <FormProvider methods={methods2} onSubmit={handleSubmitFilter(onFilter)}>
         <Modal
           open={open}
           onClose={toggle}
@@ -347,7 +339,21 @@ const EmpList = () => {
         >
           <Fade in={open}>
             <Box sx={style}>
-              <Typography
+              <FTextField
+                name="example"
+                margin="normal"
+                autoComplete="on"
+                size="small"
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={(d) => onFilter(d)}
+              >
+                Submit
+              </Button>
+
+              {/* <Typography
                 sx={{
                   textAlign: "center",
                   fontWeight: "600",
@@ -369,7 +375,7 @@ const EmpList = () => {
                   size="small"
                   placeholder="Chọn khách hàng"
                 >
-                  {customerList?.map((option) => (
+                  {reduxCustomer?.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.fullName}
                     </option>
@@ -384,13 +390,9 @@ const EmpList = () => {
                   size="small"
                   placeholder="Chọn đơn vị cho thuê mái"
                 >
-                  {[
-                    { code: "HCMC", label: "Ho Chi Minh City" },
-                    { code: "HN", label: "Hanoi" },
-                    { code: "DN", label: "Da Nang" },
-                  ].map((option) => (
-                    <option key={option.code} value={option.label}>
-                      {option.label}
+                  {reduxRoofVendor?.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
                     </option>
                   ))}
                 </FSelect>
@@ -427,7 +429,7 @@ const EmpList = () => {
                     { code: "Active", label: "Hoạt động" },
                     { code: "Inactive", label: "Không hoạt động" },
                   ].map((option) => (
-                    <option key={option.code} value={option.label}>
+                    <option key={option.code} value={option.code}>
                       {option.label}
                     </option>
                   ))}
@@ -440,8 +442,8 @@ const EmpList = () => {
                   <Grid xs>
                     <FDatePicker name="endDate" />
                   </Grid>
-                </Grid>
-                <Box
+                </Grid> */}
+              {/* <Box
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -450,7 +452,13 @@ const EmpList = () => {
                     m: 1,
                   }}
                 >
-                  <Button variant="contained" size="medium" sx={{ mr: 2 }}>
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    sx={{ mr: 2 }}
+                    type="submit"
+                    onClick={() => onFilter()}
+                  >
                     Hoàn tất
                   </Button>{" "}
                   <Button
@@ -461,15 +469,73 @@ const EmpList = () => {
                   >
                     Hủy bỏ
                   </Button>
-                </Box>
-              </Box>
+                </Box> */}
+              {/* </Box> */}
             </Box>
           </Fade>
         </Modal>
       </FormProvider>
+    );
+  };
 
+  return (
+    <Grid container spacing={2} padding={1}>
+      <Grid xs={1}>
+        {" "}
+        <IconButton onClick={toggle}>
+          <IconFilter />
+        </IconButton>
+      </Grid>
+
+      <Tooltip title="Tìm theo mã, tên dự án, khách hàng" placement="top">
+        <Grid xs={3}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(handleSearch)}>
+            <FTextField
+              name="searchValue"
+              autoComplete="on"
+              inputRef={inputRef}
+              size="small"
+              onKeyDown={handleSearchKeyDown}
+              onChange={(e) =>
+                setShowClearIcon(e.target.value === "" ? "none" : "flex")
+              }
+              placeholder="Tìm theo mã, tên dự án, khách hàng"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        if (inputRef.current) {
+                          inputRef.current.value = "";
+                        }
+                        setShowClearIcon("none");
+                        handleSearch("");
+                      }}
+                    >
+                      <ClearIcon
+                        sx={{ display: showClearIcon, fontSize: "medium" }}
+                        color="primary"
+                      />
+                    </IconButton>
+                    <IconButton
+                      disabled={!inputRef?.current?.value}
+                      onClick={() => {
+                        handleSearch(inputRef.current.value);
+                      }}
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormProvider>
+        </Grid>
+      </Tooltip>
+
+      <ModalComponent />
       <Grid xs></Grid>
-      <Grid xs={5}></Grid>
+
       <Grid xs="auto">
         {" "}
         <Button variant="contained" size="medium">
@@ -502,6 +568,7 @@ const EmpList = () => {
               </div>
             }
             onSort={handleSort}
+            sortServer
           />
         </Box>
       </Grid>

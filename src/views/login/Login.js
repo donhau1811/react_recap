@@ -127,7 +127,7 @@ export default function Login() {
       username: data.email,
       password: data.password,
     });
-    // console.log(data.email, data.password);
+    console.log(data);
   };
 
   return (

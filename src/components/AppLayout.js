@@ -38,8 +38,8 @@ export default function PersistentDrawerLeft() {
       sx={{
         display: "flex",
         fontFamily: theme.typography.fontFamily,
-        // height: "100vh",
-        // width: "100vw"
+        // minHeight: "100vh",
+        // minWidth: "100vw"
       }}
     >
       <AppHeader

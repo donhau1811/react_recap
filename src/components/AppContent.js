@@ -40,7 +40,7 @@ const AppContent = ({ open, theme }) => {
     <ThemeProvider theme={theme}>
       <Main open={open}>
         <DrawerHeader />
-        <Box bgcolor="#dfe7f2" sx={{ overflowY: "hidden" }}>
+        <Box bgcolor="#dfe7f2" sx={{ overflowY: "hidden" }} >
           <Routes>
             {routes.map((route, idx) => {
               return (
