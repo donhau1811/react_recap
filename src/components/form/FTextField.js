@@ -11,11 +11,12 @@ function FTextField({ name, ...other }) {
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}
-          onChange={(e) => {
-            field.onChange(e);
-          }}
+          // onChange={(e) => {
+          //   field.onChange(e);
+          // }}
           fullWidth
           error={!!error}
+          // isDirty={!!isDirty}
           helperText={error?.message}
           {...other}
         />

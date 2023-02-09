@@ -275,7 +275,7 @@ const EmpList = () => {
   };
 
   const defaultValues = {
-    searchValue: "" || undefined,
+    searchValue: "",
   };
 
   const defaultValuesFilter = {
@@ -290,32 +290,44 @@ const EmpList = () => {
   };
 
   const methods = useForm({ defaultValues });
-  const { handleSubmit } = methods;
+  const {
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { isDirty },
+  } = methods;
 
-  const handleSearch = (value) => {
-    fetchProject({
-      pagination: {
-        ...pagination,
-        currentPage: 1,
-      },
-      searchValue: value,
-    });
-    console.log(value);
+  useEffect(() => {
+    if (isDirty) {
+      setShowClearIcon("flex");
+    }
+  }, [isDirty]);
+
+  const handleSearch = (data) => {
+    // fetchProject({
+    //   pagination: {
+    //     ...pagination,
+    //     currentPage: 1,
+    //   },
+    //   searchValue: value,
+    // });
+    if (data) console.log(data);
+    // console.log(getValues("searchValue"));
   };
 
   const handleSearchKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      handleSearch(e.target.value);
+    if (e?.keyCode === 13) {
+      // e.preventDefault();
+      // handleSearch(e.target.value);
+      handleSubmit(handleSearch);
     }
   };
 
   const reduxRoofVendor = useSelector((state) => state.roofVendors?.data);
   const reduxCustomer = useSelector((state) => state.customers?.data);
 
-  const onFilter = (d) => {
-    // console.log(value?.customer?.value || null);
-    console.log(d);
+  const onFilter = (data) => {
+    console.log(data);
   };
 
   const methods2 = useForm({ defaultValues: defaultValuesFilter });
@@ -348,12 +360,116 @@ const EmpList = () => {
               <Button
                 type="submit"
                 variant="contained"
-                onClick={(d) => onFilter(d)}
+                onClick={handleSubmitFilter(onFilter)}
               >
                 Submit
               </Button>
+            </Box>
+          </Fade>
+        </Modal>
+      </FormProvider>
+    );
+  };
 
-              {/* <Typography
+  return (
+    <Grid container spacing={2} padding={1}>
+      <ModalComponent />
+
+      <Grid xs={1}>
+        {" "}
+        <IconButton onClick={toggle}>
+          <IconFilter />
+        </IconButton>
+      </Grid>
+
+      <Tooltip title="Tìm theo mã, tên dự án, khách hàng" placement="top">
+        <Grid xs={3}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(handleSearch)}>
+            <FTextField
+              name="searchValue"
+              autoComplete="on"
+              inputRef={inputRef}
+              size="small"
+              onKeyDown={() => handleSearchKeyDown()}
+              placeholder="Tìm theo mã, tên dự án, khách hàng"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        // if (inputRef.current) {
+                        //   inputRef.current.value = "";
+                        // }
+                        reset();
+                        setShowClearIcon("none");
+                        handleSearch("");
+                      }}
+                    >
+                      <ClearIcon
+                        sx={{ display: showClearIcon, fontSize: "medium" }}
+                        color="primary"
+                      />
+                    </IconButton>
+                    <IconButton
+                      // disabled={!inputRef?.current?.value}
+                      onClick={handleSubmit(handleSearch)}
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormProvider>
+        </Grid>
+      </Tooltip>
+
+      <Grid xs></Grid>
+
+      <Grid xs="auto">
+        {" "}
+        <Button variant="contained" size="medium">
+          Thêm mới
+        </Button>
+      </Grid>
+      <Grid xs={12}>
+        <Box>
+          <DataTable
+            columns={columns}
+            striped
+            data={cleanData || []}
+            pagination
+            paginationServer
+            paginationComponent={CustomPagination}
+            persistTableHead
+            fixedHeader
+            noHeader
+            defaultSortAsc={params?.sortDirection === "asc"}
+            fixedHeaderScrollHeight="calc(100vh - 200px)"
+            className={classNames(
+              `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
+              {
+                "overflow-hidden": total <= 0,
+              }
+            )}
+            sortIcon={
+              <div className="custom-sort-icon">
+                <Code />
+              </div>
+            }
+            onSort={handleSort}
+            sortServer
+          />
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default EmpList;
+
+{
+  /* <Typography
                 sx={{
                   textAlign: "center",
                   fontWeight: "600",
@@ -442,8 +558,10 @@ const EmpList = () => {
                   <Grid xs>
                     <FDatePicker name="endDate" />
                   </Grid>
-                </Grid> */}
-              {/* <Box
+                </Grid> */
+}
+{
+  /* <Box
                   sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -469,111 +587,8 @@ const EmpList = () => {
                   >
                     Hủy bỏ
                   </Button>
-                </Box> */}
-              {/* </Box> */}
-            </Box>
-          </Fade>
-        </Modal>
-      </FormProvider>
-    );
-  };
-
-  return (
-    <Grid container spacing={2} padding={1}>
-      <Grid xs={1}>
-        {" "}
-        <IconButton onClick={toggle}>
-          <IconFilter />
-        </IconButton>
-      </Grid>
-
-      <Tooltip title="Tìm theo mã, tên dự án, khách hàng" placement="top">
-        <Grid xs={3}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(handleSearch)}>
-            <FTextField
-              name="searchValue"
-              autoComplete="on"
-              inputRef={inputRef}
-              size="small"
-              onKeyDown={handleSearchKeyDown}
-              onChange={(e) =>
-                setShowClearIcon(e.target.value === "" ? "none" : "flex")
-              }
-              placeholder="Tìm theo mã, tên dự án, khách hàng"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => {
-                        if (inputRef.current) {
-                          inputRef.current.value = "";
-                        }
-                        setShowClearIcon("none");
-                        handleSearch("");
-                      }}
-                    >
-                      <ClearIcon
-                        sx={{ display: showClearIcon, fontSize: "medium" }}
-                        color="primary"
-                      />
-                    </IconButton>
-                    <IconButton
-                      disabled={!inputRef?.current?.value}
-                      onClick={() => {
-                        handleSearch(inputRef.current.value);
-                      }}
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </FormProvider>
-        </Grid>
-      </Tooltip>
-
-      <ModalComponent />
-      <Grid xs></Grid>
-
-      <Grid xs="auto">
-        {" "}
-        <Button variant="contained" size="medium">
-          Thêm mới
-        </Button>
-      </Grid>
-      <Grid xs={12}>
-        <Box>
-          <DataTable
-            columns={columns}
-            striped
-            data={cleanData || []}
-            pagination
-            paginationServer
-            paginationComponent={CustomPagination}
-            persistTableHead
-            fixedHeader
-            noHeader
-            defaultSortAsc={params?.sortDirection === "asc"}
-            fixedHeaderScrollHeight="calc(100vh - 200px)"
-            className={classNames(
-              `react-dataTable react-dataTable--projects hover react-dataTable-version-2`,
-              {
-                "overflow-hidden": total <= 0,
-              }
-            )}
-            sortIcon={
-              <div className="custom-sort-icon">
-                <Code />
-              </div>
-            }
-            onSort={handleSort}
-            sortServer
-          />
-        </Box>
-      </Grid>
-    </Grid>
-  );
-};
-
-export default EmpList;
+                </Box> */
+}
+{
+  /* </Box> */
+}
