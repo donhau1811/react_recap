@@ -12,3 +12,4 @@ export const API_GET_ALL_CUSTOMERS = `${BASE_API_URL_V2}/customer/all`;
 //roof-vendor
 export const API_GET_ALL_ROOF_VENDOR = `${BASE_API_URL_V2}/roof-vendor/all`
 
+export const GET_USER_BY_ROLE_ID = `${BASE_API_URL_V2}/user-role/roleId`

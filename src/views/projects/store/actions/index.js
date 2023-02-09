@@ -14,7 +14,7 @@ export const getListProject = (params = {}) => {
       limit: pagination.rowsPerPage,
       offset: pagination.rowsPerPage * (pagination.currentPage - 1),
     };
-    if (searchValue?.trim()) {
+    if (searchValue) {
       payload.searchValue = {
         value: searchValue,
         fields: ["name", "code", "companyName"],

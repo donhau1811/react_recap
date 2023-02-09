@@ -157,7 +157,7 @@ export default function Login() {
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  maxHeight: "70vh",
+                  minHeight: "70vh",
                 }}
               >
                 <Box sx={{ m: 2 }}>
