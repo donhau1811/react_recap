@@ -13,8 +13,14 @@ function FSelect({ name, children, ...other }) {
           {...field}
           select
           fullWidth
-          placeholder
-          SelectProps={{ native: true }}
+          SelectProps={{
+            native: true,
+            // MenuProps: {
+            //   sx: {
+            //     minHeight: "50%",
+            //   },
+            // },
+          }}
           error={!!error}
           helperText={error?.message}
           {...other}

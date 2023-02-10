@@ -33,23 +33,26 @@ import CP from "../../components/pagination/index";
 import { useDispatch, useSelector } from "react-redux";
 import { getListProject } from "./store/actions";
 import { SET_PROJECT_PARAMS } from "../../utility/constants/actions";
-import { ROWS_PER_PAGE_DEFAULT } from "../../utility/constants/common";
+import {
+  ROWS_PER_PAGE_DEFAULT,
+  REAL_NUMBER,
+} from "../../utility/constants/common";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import { GET_USER_BY_ROLE_ID } from "../../utility/constants/api";
 import { getUsersLimit } from "../../redux/actions/users";
 import { getAllRoofVendor } from "../../redux/actions/roofVendor";
 import { getAllCustomer } from "../../redux/actions/customer";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import "./styles.scss";
-import axios from "axios";
 
 const style = {
-  width: "500px",
+  maxWidth: "500px",
   display: "flex",
   flexDirection: "column",
   marginX: "auto",
-  // justifyContent: "center",
-  // alignItems: "center",
+  position: "relative",
+  top: "10vh",
   bgcolor: "background.paper",
   borderRadius: "5px",
   p: 4,
@@ -64,15 +67,16 @@ const InputLabel1 = styled(InputLabel)(() => ({
 }));
 
 const EmpList = () => {
-  // const [customerList, setCustomerList] = useState([]);
   const [open, setOpen] = useState(false);
   const [cleanData, setCleanData] = useState();
   const [showClearIcon, setShowClearIcon] = useState("none");
-  const [listAccountant, setListAccountant] = useState([]);
+  // const [listAccountant, setListAccountant] = useState([]);
   const dispatch = useDispatch();
   const { data, params, total } = useSelector((state) => state.projects);
   let { pagination = {}, searchValue, filterValue } = params || {};
   const userList = useSelector((state) => state.users?.data);
+  const reduxRoofVendor = useSelector((state) => state.roofVendors?.data);
+  const reduxCustomer = useSelector((state) => state.customers?.data);
 
   const toggle = () => {
     setOpen(!open);
@@ -96,36 +100,38 @@ const EmpList = () => {
       ?.toString();
   };
 
-  useEffect(() => {
-    try {
-      const [AccountantsRes, MAccountantRes] = Promise.all([
-        axios.get(`${GET_USER_BY_ROLE_ID}/${5}`),
-        axios.get(`${GET_USER_BY_ROLE_ID}/${4}`),
-      ]);
+  // useEffect( () => {
+  //   try {
+  //     const [AccountantsRes, MAccountantRes] =  Promise.all([
+  //       axios.get(`${GET_USER_BY_ROLE_ID}/${5}`),
+  //       axios.get(`${GET_USER_BY_ROLE_ID}/${4}`),
+  //     ]);
 
-      let allAccountant = [];
-      if (AccountantsRes.status === 200 && AccountantsRes.data?.data) {
-        allAccountant = allAccountant.concat(
-          (AccountantsRes.data.data || []).map(({ id, fullName }) => ({
-            value: id,
-            label: fullName,
-          }))
-        ); // AccountantROle
-      }
-      if (MAccountantRes.status === 200 && MAccountantRes.data?.data) {
-        allAccountant = allAccountant.concat(
-          (MAccountantRes.data.data || []).map(({ id, fullName }) => ({
-            value: id,
-            label: fullName,
-          }))
-        );
-        //ManageAccountantRole
-        setListAccountant(allAccountant);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }, []);
+  //     let allAccountant = [];
+  //     if (AccountantsRes.status === 200 && AccountantsRes.data?.data) {
+  //       allAccountant = allAccountant.concat(
+  //         (AccountantsRes.data.data || []).map(({ id, fullName }) => ({
+  //           value: id,
+  //           label: fullName,
+  //         }))
+  //       ); // AccountantROle
+  //     }
+  //     if (MAccountantRes.status === 200 && MAccountantRes.data?.data) {
+  //       allAccountant = allAccountant.concat(
+  //         (MAccountantRes.data.data || []).map(({ id, fullName }) => ({
+  //           value: id,
+  //           label: fullName,
+  //         }))
+  //       );
+  //       //ManageAccountantRole
+  //       setListAccountant(allAccountant);
+  //       console.log(listAccountant);
+  //     }
+  //   } catch (err) {
+  //     console.log("err", err);
+  //   }
+
+  // }, []);
 
   useEffect(() => {
     dispatch(getAllRoofVendor());
@@ -322,6 +328,16 @@ const EmpList = () => {
     end: "",
   };
 
+  const ValidateSchema = yup.object().shape({
+    capacity: yup
+      .string()
+      .matches(REAL_NUMBER, {
+        message: "Dữ liệu không hợp lệ",
+        excludeEmptyString: true,
+      })
+      .max(16, "Tối đa 16 số"),
+  });
+
   const methods = useForm({ defaultValues });
   const {
     handleSubmit,
@@ -345,6 +361,17 @@ const EmpList = () => {
     });
   };
 
+  const handleFilter = (value) => {
+    fetchProject({
+      pagination: {
+        ...pagination,
+        currentPage: 1,
+      },
+      searchValue: "",
+      filterValue: value,
+    });
+  };
+
   const handleSearchKeyDown = (e) => {
     if (e?.keyCode === 13) {
       e.preventDefault();
@@ -352,14 +379,35 @@ const EmpList = () => {
     }
   };
 
-  const reduxRoofVendor = useSelector((state) => state.roofVendors?.data);
-  const reduxCustomer = useSelector((state) => state.customers?.data);
-
   const onFilter = (data) => {
-    console.log(data);
+    // console.log(data.start.format("YYYY-MM-DD"));
+    const payload = {};
+    if (data.state?.value !== "ALL_STATUS") {
+      payload.state = data.state;
+    }
+    payload.customerId = data.customerId || null;
+    payload.roofVendorId = data.roofVendorId || null;
+    payload.userId = data.userId || null;
+    payload.startDate =
+      data.start && data.end
+        ? {
+            start: data.start.format("YYYY-MM-DD"),
+            end: data.end.format("YYYY-MM-DD"),
+          }
+        : null;
+    payload.capacity = data.capacity;
+
+    handleFilter(payload);
+    toggle();
+
+    // console.log(payload);
   };
 
-  const methods2 = useForm({ defaultValues: defaultValuesFilter });
+  const methods2 = useForm({
+    defaultValues: defaultValuesFilter,
+    resolver: yupResolver(ValidateSchema),
+    shouldUnregister: false,
+  });
 
   const { handleSubmit: handleSubmitFilter } = methods2;
 
@@ -396,12 +444,7 @@ const EmpList = () => {
               <Divider sx={{ backgroundColor: "black", mt: 2 }} />
               <Box sx={{ mt: 2 }}>
                 <InputLabel1 htmlFor="customer">Khách hàng</InputLabel1>
-                <FSelect
-                  name="customerId"
-                  id="customer"
-                  size="small"
-                  placeholder="Chọn khách hàng"
-                >
+                <FSelect name="customerId" id="customer" size="small">
                   {reduxCustomer?.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.fullName}
@@ -411,12 +454,7 @@ const EmpList = () => {
                 <InputLabel1 htmlFor="roofRental">
                   Đơn vị cho thuê mái
                 </InputLabel1>
-                <FSelect
-                  name="roofVendorId"
-                  id="roofRental"
-                  size="small"
-                  placeholder="Chọn đơn vị cho thuê mái"
-                >
+                <FSelect name="roofVendorId" id="roofRental" size="small">
                   {reduxRoofVendor?.map((option) => (
                     <option key={option.id} value={option.id}>
                       {option.name}
@@ -441,7 +479,12 @@ const EmpList = () => {
                   ))}
                 </FSelect>
                 <InputLabel1 html="power">Công suất</InputLabel1>
-                <FTextField name="capacity" id="power" size="small" />
+                <FTextField
+                  name="capacity"
+                  id="power"
+                  size="small"
+                  placeholder="Nhập công suất"
+                />
                 <InputLabel1 htmlFor="accountant">
                   Kế toán phụ trách
                 </InputLabel1>
@@ -450,13 +493,19 @@ const EmpList = () => {
                   id="accountant"
                   size="small"
                   placeholder="Chọn kế toán phụ trách"
+                  defaultValue={defaultValues.userId}
                 >
-                  {/* {listAccountant?.map((option) => (
+                  {[
+                    { value: "", label: "Tất cả kế toán phụ trách" },
+                    { value: 1, label: "Hứa Văn Cường" },
+                    { value: 2, label: "Bùi Nhật Bình" },
+                    { value: 3, label: "Nguyễn Duy Long" },
+                    { value: 4, label: "La Duệ Tân" },
+                  ].map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
-                  ))} */}
-                  {listAccountant}
+                  ))}
                 </FSelect>
                 <InputLabel1>Ngày vận hành</InputLabel1>
                 <Grid sx={{ mb: 2 }} container spacing={5}>
@@ -503,7 +552,7 @@ const EmpList = () => {
   };
 
   return (
-    <Grid container spacing={2} padding={1}>
+    <Grid container spacing={2} padding={2}>
       <ModalComponent />
 
       <Grid xs={1}>
